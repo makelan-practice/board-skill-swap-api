@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SkillSwap.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a647282a4f60ef39e6d0d4bdaab9e70e465b39bf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+919f5a049cd2a9a721d755b455dd7650154ebdb0")]
 [assembly: System.Reflection.AssemblyProductAttribute("SkillSwap.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SkillSwap.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

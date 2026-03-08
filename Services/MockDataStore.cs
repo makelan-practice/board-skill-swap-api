@@ -32,32 +32,75 @@ public class MockDataStore
 
     private void SeedData()
     {
-        // Категории (как на макете)
+        // Категории (порядок как в списке всех навыков)
         var catBiz = AddCategory("Бизнес и карьера");
-        var catArt = AddCategory("Творчество и искусство");
         var catLang = AddCategory("Иностранные языки");
+        var catHome = AddCategory("Дом и уют");
+        var catArt = AddCategory("Творчество и искусство");
         var catEdu = AddCategory("Образование и развитие");
         var catHealth = AddCategory("Здоровье и лайфстайл");
-        var catHome = AddCategory("Дом и уют");
 
-        // Навыки
-        var sDrum = AddSkill("Игра на барабанах", catArt.Id);
-        var sEnglish = AddSkill("Английский язык", catLang.Id);
-        var sBusiness = AddSkill("Бизнес-план", catBiz.Id);
-        var sTimeMgmt = AddSkill("Тайм-менеджмент", catEdu.Id);
-        var sMeditation = AddSkill("Медитация", catHealth.Id);
-        var sCooking = AddSkill("Готовка", catHome.Id);
+        // Бизнес и карьера
+        var sTeamMgmt = AddSkill("Управление командой", catBiz.Id);
+        var sMarketing = AddSkill("Маркетинг и реклама", catBiz.Id);
+        var sSales = AddSkill("Продажи и переговоры", catBiz.Id);
+        var sPersonalBrand = AddSkill("Личный бренд", catBiz.Id);
+        var sResume = AddSkill("Резюме и собеседование", catBiz.Id);
+        var sTimeMgmt = AddSkill("Тайм-менеджмент", catBiz.Id);
+        var sProjectMgmt = AddSkill("Проектное управление", catBiz.Id);
+        var sEntrepreneurship = AddSkill("Предпринимательство", catBiz.Id);
+
+        // Иностранные языки
+        var sEnglish = AddSkill("Английский", catLang.Id);
+        var sFrench = AddSkill("Французский", catLang.Id);
+        var sSpanish = AddSkill("Испанский", catLang.Id);
+        var sGerman = AddSkill("Немецкий", catLang.Id);
+        var sChinese = AddSkill("Китайский", catLang.Id);
+        var sJapanese = AddSkill("Японский", catLang.Id);
+        var sExamPrep = AddSkill("Подготовка к экзаменам (IELTS, TOEFL)", catLang.Id);
+
+        // Дом и уют
+        var sCleaning = AddSkill("Уборка и организация", catHome.Id);
+        var sHomeFinance = AddSkill("Домашние финансы", catHome.Id);
+        var sCooking = AddSkill("Приготовление еды", catHome.Id);
+        var sPlants = AddSkill("Домашние растения", catHome.Id);
+        var sRepair = AddSkill("Ремонт", catHome.Id);
+        var sStorage = AddSkill("Хранение вещей", catHome.Id);
+
+        // Творчество и искусство
+        var sDrawing = AddSkill("Рисование и иллюстрация", catArt.Id);
         var sPhoto = AddSkill("Фотография", catArt.Id);
-        var sSpanish = AddSkill("Испанский язык", catLang.Id);
-        var sYoga = AddSkill("Йога", catHealth.Id);
+        var sVideoEdit = AddSkill("Видеомонтаж", catArt.Id);
+        var sMusic = AddSkill("Музыка и звук", catArt.Id);
+        var sActing = AddSkill("Актёрское мастерство", catArt.Id);
+        var sCreativeWriting = AddSkill("Креативное письмо", catArt.Id);
+        var sArtTherapy = AddSkill("Арт-терапия", catArt.Id);
+        var sDecor = AddSkill("Декор и DIY", catArt.Id);
 
-        // Пользователи
-        var u1 = AddUser("Иван", "Санкт-Петербург", 34, "Мужской", new[] { sDrum.Id }, new[] { sTimeMgmt.Id, sMeditation.Id });
-        var u2 = AddUser("Анна", "Казань", 26, "Женский", new[] { sEnglish.Id, sBusiness.Id }, new[] { sMeditation.Id });
-        var u3 = AddUser("Максим", "Москва", 23, "Мужской", new[] { sPhoto.Id }, new[] { sSpanish.Id, sYoga.Id });
-        var u4 = AddUser("Елена", "Новосибирск", 30, "Женский", new[] { sCooking.Id, sYoga.Id }, new[] { sEnglish.Id });
-        var u5 = AddUser("Дмитрий", "Екатеринбург", 28, "Мужской", new[] { sTimeMgmt.Id }, new[] { sDrum.Id });
-        var u6 = AddUser("Ольга", "Москва", 25, "Женский", new[] { sMeditation.Id }, new[] { sBusiness.Id, sPhoto.Id });
+        // Образование и развитие
+        var sPersonalDev = AddSkill("Личностное развитие", catEdu.Id);
+        var sLearningSkills = AddSkill("Навыки обучения", catEdu.Id);
+        var sCognitive = AddSkill("Когнитивные техники", catEdu.Id);
+        var sSpeedReading = AddSkill("Скорочтение", catEdu.Id);
+        var sTeaching = AddSkill("Навыки преподавания", catEdu.Id);
+        var sCoaching = AddSkill("Коучинг", catEdu.Id);
+
+        // Здоровье и лайфстайл
+        var sYogaMeditation = AddSkill("Йога и медитация", catHealth.Id);
+        var sNutrition = AddSkill("Питание и ЗОЖ", catHealth.Id);
+        var sMentalHealth = AddSkill("Ментальное здоровье", catHealth.Id);
+        var sMindfulness = AddSkill("Осознанность", catHealth.Id);
+        var sFitness = AddSkill("Физические тренировки", catHealth.Id);
+        var sSleep = AddSkill("Сон и восстановление", catHealth.Id);
+        var sWorkLifeBalance = AddSkill("Баланс жизни и работы", catHealth.Id);
+
+        // Пользователи (привязаны к навыкам из полного списка)
+        var u1 = AddUser("Иван", "Санкт-Петербург", 34, "Мужской", new[] { sMusic.Id }, new[] { sTimeMgmt.Id, sYogaMeditation.Id });
+        var u2 = AddUser("Анна", "Казань", 26, "Женский", new[] { sEnglish.Id, sEntrepreneurship.Id }, new[] { sYogaMeditation.Id });
+        var u3 = AddUser("Максим", "Москва", 23, "Мужской", new[] { sPhoto.Id }, new[] { sSpanish.Id, sYogaMeditation.Id });
+        var u4 = AddUser("Елена", "Новосибирск", 30, "Женский", new[] { sCooking.Id, sYogaMeditation.Id }, new[] { sEnglish.Id });
+        var u5 = AddUser("Дмитрий", "Екатеринбург", 28, "Мужской", new[] { sTimeMgmt.Id }, new[] { sMusic.Id });
+        var u6 = AddUser("Ольга", "Москва", 25, "Женский", new[] { sYogaMeditation.Id }, new[] { sEntrepreneurship.Id, sPhoto.Id });
 
         // Заявки на обмен
         ExchangeRequests.Add(new ExchangeRequest
@@ -65,7 +108,7 @@ public class MockDataStore
             Id = NextRequestId(),
             FromUserId = u1.Id,
             ToUserId = u2.Id,
-            OfferedSkillId = sDrum.Id,
+            OfferedSkillId = sMusic.Id,
             RequestedSkillId = sEnglish.Id,
             Status = "Pending",
             CreatedAt = DateTime.UtcNow.AddDays(-2)
