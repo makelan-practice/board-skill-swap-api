@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SkillSwap.Api</name>
+    </assembly>
+    <members>
+        <member name="M:SkillSwap.Api.Controllers.ExchangeRequestsController.GetRequests(System.Nullable{System.Int32},System.String)">
+            <summary>Список заявок (по userId и/или status).</summary>
+            <param name="userId">Id пользователя (отправитель или получатель).</param>
+            <param name="status">Статус: Pending, Accepted, Rejected.</param>
+            <returns>Список заявок.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.ExchangeRequestsController.GetRequest(System.Int32)">
+            <summary>Заявка по id.</summary>
+            <param name="id">Id заявки.</param>
+            <returns>Заявка или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.ExchangeRequestsController.CreateRequest(SkillSwap.Api.Models.Dtos.CreateExchangeRequestDto)">
+            <summary>Создать заявку на обмен.</summary>
+            <param name="dto">Данные заявки: FromUserId, ToUserId, OfferedSkillId, RequestedSkillId.</param>
+            <returns>Созданная заявка (201).</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.ExchangeRequestsController.Respond(System.Int32,System.Boolean)">
+            <summary>Принять или отклонить заявку. При принятии создаётся сессия обмена.</summary>
+            <param name="id">Id заявки.</param>
+            <param name="accept">true — принять, false — отклонить.</param>
+            <returns>Обновлённая заявка или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.ExchangeSessionsController.GetSessions(System.Nullable{System.Int32},System.String)">
+            <summary>Список сессий обмена (по userId и/или status).</summary>
+            <param name="userId">Id пользователя-участника.</param>
+            <param name="status">Статус: Active, Completed, Cancelled.</param>
+            <returns>Список сессий.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.ExchangeSessionsController.GetSession(System.Int32)">
+            <summary>Сессия по id.</summary>
+            <param name="id">Id сессии.</param>
+            <returns>Сессия или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.ExchangeSessionsController.Complete(System.Int32)">
+            <summary>Завершить сессию обмена.</summary>
+            <param name="id">Id сессии.</param>
+            <returns>Обновлённая сессия или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.ExchangeSessionsController.Cancel(System.Int32)">
+            <summary>Отменить сессию обмена.</summary>
+            <param name="id">Id сессии.</param>
+            <returns>Обновлённая сессия или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.FavoritesController.GetFavorites(System.Int32,System.Boolean)">
+            <summary>Избранные пользователи для текущего пользователя.</summary>
+            <param name="userId">Id пользователя.</param>
+            <param name="usersOnly">Только пользователи (true) или включая навыки (false).</param>
+            <returns>Список карточек избранных пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.FavoritesController.AddFavorite(System.Int32,System.Int32,System.Nullable{System.Int32})">
+            <summary>Добавить пользователя в избранное.</summary>
+            <param name="userId">Id пользователя, который добавляет.</param>
+            <param name="targetUserId">Id пользователя, которого добавляют.</param>
+            <param name="targetSkillId">Опционально: id навыка.</param>
+            <returns>Созданная запись избранного или 409 (уже в избранном).</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.FavoritesController.RemoveFavorite(System.Int32,System.Int32,System.Nullable{System.Int32})">
+            <summary>Удалить из избранного.</summary>
+            <param name="userId">Id пользователя.</param>
+            <param name="targetUserId">Id пользователя, которого убирают.</param>
+            <param name="targetSkillId">Опционально: id навыка.</param>
+            <returns>204 при успехе или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.FavoritesController.IsFavorite(System.Int32,System.Int32)">
+            <summary>Проверить, в избранном ли пользователь.</summary>
+            <param name="userId">Id пользователя, у которого проверяют избранное.</param>
+            <param name="targetUserId">Id проверяемого пользователя.</param>
+            <returns>Объект { isFavorite: true/false }.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.MatchController.GetMatches(System.Int32,System.Int32)">
+            <summary>Подбор пар для обмена: пользователи, с которыми возможен взаимный обмен навыками.</summary>
+            <param name="userId">Id пользователя, для которого подбирают пары.</param>
+            <param name="maxCount">Максимальное количество пар (по умолчанию 20).</param>
+            <returns>Список пар: пользователь и навыки обмена.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.SkillsController.GetCategories">
+            <summary>Все категории навыков.</summary>
+            <returns>Список категорий.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.SkillsController.GetCategory(System.Int32)">
+            <summary>Категория по id.</summary>
+            <param name="id">Id категории.</param>
+            <returns>Категория или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.SkillsController.GetSkills(System.Nullable{System.Int32},System.String)">
+            <summary>Список навыков (по категории и/или поиск по названию)</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.SkillsController.GetSkill(System.Int32)">
+            <summary>Навык по id.</summary>
+            <param name="id">Id навыка.</param>
+            <returns>Навык или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UsersController.GetUsers(System.String,System.Int32[],System.String,System.String,System.String)">
+            <summary>Список пользователей с фильтрами (тип активности, навыки, пол, город, поиск по навыку).</summary>
+            <param name="activityType">«Хочу научиться» или «Могу научить».</param>
+            <param name="skillIds">Id навыков.</param>
+            <param name="gender">Пол: Мужской, Женский, Не имеет значения.</param>
+            <param name="city">Город.</param>
+            <param name="search">Поиск по названию навыка.</param>
+            <returns>Список карточек пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UsersController.GetUser(System.Int32)">
+            <summary>Карточка пользователя по id.</summary>
+            <param name="id">Id пользователя.</param>
+            <returns>Карточка пользователя или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UsersController.GetPopular(System.Int32)">
+            <summary>Популярные пользователи (для блока «Популярное»).</summary>
+            <param name="count">Количество записей (по умолчанию 6).</param>
+            <returns>Список карточек пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UsersController.GetNew(System.Int32)">
+            <summary>Новые пользователи (для блока «Новое»).</summary>
+            <param name="count">Количество записей (по умолчанию 6).</param>
+            <returns>Список карточек пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UsersController.GetRecommended(System.Int32,System.Int32)">
+            <summary>Рекомендуемые пользователи для обмена (для блока «Рекомендуем»).</summary>
+            <param name="userId">Id текущего пользователя.</param>
+            <param name="count">Количество записей (по умолчанию 6).</param>
+            <returns>Список карточек пользователей.</returns>
+        </member>
+        <member name="P:SkillSwap.Api.Models.User.TeachingSkillIds">
+            <summary>Чему может научить (Учу)</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.User.LearningSkillIds">
+            <summary>Чему хочет научиться (Учусь)</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ExchangeRequestService.GetRequests(System.Nullable{System.Int32},System.String)">
+            <summary>Возвращает список заявок на обмен с опциональной фильтрацией по пользователю и статусу.</summary>
+            <param name="userId">Id пользователя (заявки, где он отправитель или получатель).</param>
+            <param name="status">Статус заявки: Pending, Accepted, Rejected.</param>
+            <returns>Список заявок в виде DTO.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ExchangeRequestService.GetRequestById(System.Int32)">
+            <summary>Возвращает заявку на обмен по идентификатору.</summary>
+            <param name="id">Id заявки.</param>
+            <returns>DTO заявки или null, если не найдена.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ExchangeRequestService.Create(SkillSwap.Api.Models.Dtos.CreateExchangeRequestDto)">
+            <summary>Создаёт новую заявку на обмен навыками.</summary>
+            <param name="dto">Данные заявки: от кого, кому, какой навык предлагает, какому хочет научиться.</param>
+            <returns>Созданная заявка в виде DTO.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ExchangeRequestService.Respond(System.Int32,System.Boolean)">
+            <summary>Принимает или отклоняет заявку на обмен. При принятии создаётся сессия обмена.</summary>
+            <param name="requestId">Id заявки.</param>
+            <param name="accept">true — принять, false — отклонить.</param>
+            <returns>Обновлённая заявка в виде DTO или null, если заявка не найдена.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ExchangeSessionService.GetSessions(System.Nullable{System.Int32},System.String)">
+            <summary>Возвращает список сессий обмена с фильтрацией по пользователю и статусу.</summary>
+            <param name="userId">Id пользователя (сессии, где он участник).</param>
+            <param name="status">Статус: Active, Completed, Cancelled.</param>
+            <returns>Список сессий в виде DTO.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ExchangeSessionService.GetSessionById(System.Int32)">
+            <summary>Возвращает сессию обмена по идентификатору.</summary>
+            <param name="id">Id сессии.</param>
+            <returns>DTO сессии или null.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ExchangeSessionService.CancelSession(System.Int32)">
+            <summary>Отменяет сессию обмена.</summary>
+            <param name="sessionId">Id сессии.</param>
+            <returns>Обновлённая сессия в виде DTO или null.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.FavoriteService.GetFavoritesByUserId(System.Int32,System.Boolean)">
+            <summary>Возвращает избранных пользователей для указанного пользователя.</summary>
+            <param name="userId">Id пользователя, чьё избранное запрашивается.</param>
+            <param name="usersOnly">Если true — только пользователи; иначе включаются записи по навыкам.</param>
+            <returns>Список карточек избранных пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.FavoriteService.AddFavorite(System.Int32,System.Int32,System.Nullable{System.Int32})">
+            <summary>Добавляет пользователя или навык в избранное.</summary>
+            <param name="userId">Id пользователя, который добавляет в избранное.</param>
+            <param name="targetUserId">Id пользователя, которого добавляют в избранное.</param>
+            <param name="targetSkillId">Опционально: id навыка (для избранных навыков).</param>
+            <returns>Созданная запись избранного или null, если уже в избранном.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.FavoriteService.IsFavorite(System.Int32,System.Int32)">
+            <summary>Проверяет, находится ли пользователь в избранном у указанного пользователя.</summary>
+            <param name="userId">Id пользователя, у которого проверяют избранное.</param>
+            <param name="targetUserId">Id проверяемого пользователя.</param>
+            <returns>true, если в избранном.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.MatchService.GetMatchesForUser(System.Int32,System.Int32)">
+            <summary>Подбор пар для обмена: пользователи, с которыми возможен взаимный обмен навыками (я учу тебя X, ты меня Y).</summary>
+            <param name="userId">Id пользователя, для которого подбирают пары.</param>
+            <param name="maxCount">Максимальное количество пар.</param>
+            <returns>Список пар: пользователь и названия навыков обмена.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.SkillService.GetCategories">
+            <summary>Возвращает все категории навыков.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.SkillService.GetCategoryById(System.Int32)">
+            <summary>Возвращает категорию по идентификатору.</summary>
+            <param name="id">Id категории.</param>
+            <returns>Категория или null.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.SkillService.GetSkills(System.Nullable{System.Int32},System.String)">
+            <summary>Возвращает список навыков с опциональной фильтрацией по категории и поиску по названию.</summary>
+            <param name="categoryId">Id категории (опционально).</param>
+            <param name="search">Строка поиска по названию навыка.</param>
+            <returns>Список навыков.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.SkillService.GetSkillById(System.Int32)">
+            <summary>Возвращает навык по идентификатору.</summary>
+            <param name="id">Id навыка.</param>
+            <returns>Навык или null.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserService.GetUsers(System.String,System.Int32[],System.String,System.String,System.String)">
+            <summary>Возвращает список пользователей с фильтрацией по типу активности, навыкам, полу, городу и поиску по названию навыка.</summary>
+            <param name="activityType">«Хочу научиться» или «Могу научить».</param>
+            <param name="skillIds">Id навыков: показываются пользователи, у которых есть хотя бы один из них.</param>
+            <param name="gender">Пол: Мужской, Женский или «Не имеет значения».</param>
+            <param name="city">Город.</param>
+            <param name="search">Поиск по названию навыка (в «Учу» или «Учусь»).</param>
+            <returns>Список карточек пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserService.GetUserById(System.Int32)">
+            <summary>Возвращает карточку пользователя по идентификатору.</summary>
+            <param name="id">Id пользователя.</param>
+            <returns>Карточка пользователя (Учу / Учусь) или null.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserService.GetPopular(System.Int32)">
+            <summary>Возвращает популярных пользователей (по количеству указанных навыков).</summary>
+            <param name="count">Максимальное количество записей.</param>
+            <returns>Список карточек пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserService.GetNew(System.Int32)">
+            <summary>Возвращает новых пользователей (последние добавленные по id).</summary>
+            <param name="count">Максимальное количество записей.</param>
+            <returns>Список карточек пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserService.GetRecommended(System.Int32,System.Int32)">
+            <summary>Возвращает рекомендуемых для обмена пользователей: те, кто может научить нужному навыку или хочет научиться тому, чему учит текущий.</summary>
+            <param name="userId">Id текущего пользователя.</param>
+            <param name="count">Максимальное количество записей.</param>
+            <returns>Список карточек пользователей.</returns>
+        </member>
+    </members>
+</doc>
