@@ -8,8 +8,13 @@ namespace SkillSwap.Api.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly UserService _userService;
+    private readonly IWebHostEnvironment _env;
 
-    public UsersController(UserService userService) => _userService = userService;
+    public UsersController(UserService userService, IWebHostEnvironment env)
+    {
+        _userService = userService;
+        _env = env;
+    }
 
     /// <summary>Список пользователей с фильтрами (тип активности, навыки, пол, город, поиск по навыку).</summary>
     /// <param name="activityType">«Хочу научиться» или «Могу научить».</param>
@@ -39,6 +44,34 @@ public class UsersController : ControllerBase
         var user = _userService.GetUserById(id);
         if (user == null) return NotFound();
         return Ok(user);
+    }
+
+    /// <summary>Возвращает файл аватара пользователя (изображение).</summary>
+    /// <param name="id">Id пользователя.</param>
+    /// <returns>Файл изображения (image/jpeg или image/png) или 404.</returns>
+    [HttpGet("{id:int}/avatar")]
+    public IActionResult GetAvatar(int id)
+    {
+        var user = _userService.GetUserById(id);
+        if (user == null || string.IsNullOrEmpty(user.AvatarUrl)) return NotFound();
+
+        // AvatarUrl имеет вид "/Users/имя_файла.jpg"
+        var fileName = Path.GetFileName(user.AvatarUrl.TrimStart('/'));
+        if (string.IsNullOrEmpty(fileName)) return NotFound();
+
+        var path = Path.Combine(_env.WebRootPath, "Users", fileName);
+        if (!System.IO.File.Exists(path)) return NotFound();
+
+        var contentType = Path.GetExtension(fileName).ToLowerInvariant() switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".gif" => "image/gif",
+            ".webp" => "image/webp",
+            _ => "application/octet-stream"
+        };
+
+        return PhysicalFile(path, contentType, fileName);
     }
 
     /// <summary>Популярные пользователи (для блока «Популярное»).</summary>

@@ -110,6 +110,11 @@
             <param name="id">Id пользователя.</param>
             <returns>Карточка пользователя или 404.</returns>
         </member>
+        <member name="M:SkillSwap.Api.Controllers.UsersController.GetAvatar(System.Int32)">
+            <summary>Возвращает файл аватара пользователя (изображение).</summary>
+            <param name="id">Id пользователя.</param>
+            <returns>Файл изображения (image/jpeg или image/png) или 404.</returns>
+        </member>
         <member name="M:SkillSwap.Api.Controllers.UsersController.GetPopular(System.Int32)">
             <summary>Популярные пользователи (для блока «Популярное»).</summary>
             <param name="count">Количество записей (по умолчанию 6).</param>

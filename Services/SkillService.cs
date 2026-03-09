@@ -27,11 +27,19 @@ public class SkillService
             skills = skills.Where(s => s.CategoryId == categoryId.Value);
         if (!string.IsNullOrWhiteSpace(search))
             skills = skills.Where(s => s.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+        foreach (var skill in skills)
+            skill.Category = _store.Categories.FirstOrDefault(c => c.Id == skill.CategoryId);
         return skills;
     }
 
     /// <summary>Возвращает навык по идентификатору.</summary>
     /// <param name="id">Id навыка.</param>
     /// <returns>Навык или null.</returns>
-    public Skill? GetSkillById(int id) => _store.Skills.FirstOrDefault(s => s.Id == id);
+    public Skill? GetSkillById(int id)
+    {
+        var skill = _store.Skills.FirstOrDefault(s => s.Id == id);
+        if (skill != null)
+            skill.Category = _store.Categories.FirstOrDefault(c => c.Id == skill.CategoryId);
+        return skill;
+    }
 }

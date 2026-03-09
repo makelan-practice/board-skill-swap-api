@@ -94,13 +94,13 @@ public class MockDataStore
         var sSleep = AddSkill("Сон и восстановление", catHealth.Id);
         var sWorkLifeBalance = AddSkill("Баланс жизни и работы", catHealth.Id);
 
-        // Пользователи (привязаны к навыкам из полного списка)
-        var u1 = AddUser("Иван", "Санкт-Петербург", 34, "Мужской", new[] { sMusic.Id }, new[] { sTimeMgmt.Id, sYogaMeditation.Id });
-        var u2 = AddUser("Анна", "Казань", 26, "Женский", new[] { sEnglish.Id, sEntrepreneurship.Id }, new[] { sYogaMeditation.Id });
-        var u3 = AddUser("Максим", "Москва", 23, "Мужской", new[] { sPhoto.Id }, new[] { sSpanish.Id, sYogaMeditation.Id });
-        var u4 = AddUser("Елена", "Новосибирск", 30, "Женский", new[] { sCooking.Id, sYogaMeditation.Id }, new[] { sEnglish.Id });
-        var u5 = AddUser("Дмитрий", "Екатеринбург", 28, "Мужской", new[] { sTimeMgmt.Id }, new[] { sMusic.Id });
-        var u6 = AddUser("Ольга", "Москва", 25, "Женский", new[] { sYogaMeditation.Id }, new[] { sEntrepreneurship.Id, sPhoto.Id });
+        // Пользователи (привязаны к навыкам и аватарам из wwwroot/Users)
+        var u1 = AddUser("Иван", "Санкт-Петербург", 34, "Мужской", new[] { sMusic.Id }, new[] { sTimeMgmt.Id, sYogaMeditation.Id }, "/Users/Ivan_34_spb.jpg");
+        var u2 = AddUser("Анна", "Казань", 26, "Женский", new[] { sEnglish.Id, sEntrepreneurship.Id }, new[] { sYogaMeditation.Id }, "/Users/Anna_26_kaz.jpg");
+        var u3 = AddUser("Максим", "Москва", 23, "Мужской", new[] { sPhoto.Id }, new[] { sSpanish.Id, sYogaMeditation.Id }, "/Users/Maksim_23_msk.jpg");
+        var u4 = AddUser("Елена", "Новосибирск", 30, "Женский", new[] { sCooking.Id, sYogaMeditation.Id }, new[] { sEnglish.Id }, "/Users/Elena_28_krasn.jpg");
+        var u5 = AddUser("Дмитрий", "Екатеринбург", 28, "Мужской", new[] { sTimeMgmt.Id }, new[] { sMusic.Id }, "/Users/Dmitry_28_msk.jpg");
+        var u6 = AddUser("Ольга", "Москва", 25, "Женский", new[] { sYogaMeditation.Id }, new[] { sEntrepreneurship.Id, sPhoto.Id }, "/Users/Olga_27_spb.jpg");
 
         // Заявки на обмен
         ExchangeRequests.Add(new ExchangeRequest
@@ -144,7 +144,7 @@ public class MockDataStore
         return s;
     }
 
-    private User AddUser(string name, string city, int age, string gender, int[] teaching, int[] learning)
+    private User AddUser(string name, string city, int age, string gender, int[] teaching, int[] learning, string? avatarUrl = null)
     {
         var u = new User
         {
@@ -153,6 +153,7 @@ public class MockDataStore
             City = city,
             Age = age,
             Gender = gender,
+            AvatarUrl = avatarUrl,
             TeachingSkillIds = teaching.ToList(),
             LearningSkillIds = learning.ToList()
         };

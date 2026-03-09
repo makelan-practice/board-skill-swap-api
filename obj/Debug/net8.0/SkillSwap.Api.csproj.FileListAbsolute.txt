@@ -37,3 +37,4 @@ F:\Project\yandex-practice\board-skill-swap-api\obj\Debug\net8.0\SkillSwap.Api.g
 F:\Project\yandex-practice\board-skill-swap-api\obj\Debug\net8.0\ref\SkillSwap.Api.dll
 F:\Project\yandex-practice\board-skill-swap-api\bin\Debug\net8.0\SkillSwap.Api.xml
 F:\Project\yandex-practice\board-skill-swap-api\obj\Debug\net8.0\SkillSwap.Api.xml
+F:\Project\yandex-practice\board-skill-swap-api\bin\Debug\net8.0\SkillSwap.Api.staticwebassets.runtime.json

@@ -39,6 +39,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+app.UseStaticFiles(); // статические файлы из wwwroot (аватары: /Users/...)
 app.MapControllers();
 
 app.Run();
