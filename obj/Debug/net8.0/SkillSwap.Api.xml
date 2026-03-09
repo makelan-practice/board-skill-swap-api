@@ -86,6 +86,20 @@
             <param name="maxCount">Максимальное количество пар (по умолчанию 20).</param>
             <returns>Список пар: пользователь и навыки обмена.</returns>
         </member>
+        <member name="M:SkillSwap.Api.Controllers.ReferencesController.GetGenders">
+            <summary>Справочник полов (Не указан, Мужской, Женский).</summary>
+            <returns>Список { id, name } для выпадающего списка.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.ReferencesController.GetCities">
+            <summary>Справочник городов.</summary>
+            <returns>Список { id, name } для выпадающего списка.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.ReferencesController.GetGender(System.Int32)">
+            <summary>Пол по id.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.ReferencesController.GetCity(System.Int32)">
+            <summary>Город по id.</summary>
+        </member>
         <member name="M:SkillSwap.Api.Controllers.SkillsController.GetCategories">
             <summary>Все категории навыков.</summary>
             <returns>Список категорий.</returns>
@@ -103,12 +117,12 @@
             <param name="id">Id навыка.</param>
             <returns>Навык или 404.</returns>
         </member>
-        <member name="M:SkillSwap.Api.Controllers.UsersController.GetUsers(System.String,System.Int32[],System.String,System.String,System.String)">
+        <member name="M:SkillSwap.Api.Controllers.UsersController.GetUsers(System.String,System.Int32[],System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
             <summary>Список пользователей с фильтрами (тип активности, навыки, пол, город, поиск по навыку).</summary>
             <param name="activityType">«Хочу научиться» или «Могу научить».</param>
             <param name="skillIds">Id навыков.</param>
-            <param name="gender">Пол: Мужской, Женский, Не имеет значения.</param>
-            <param name="city">Город.</param>
+            <param name="genderId">Id пола из справочника (1=не имеет значения, 2=Мужской, 3=Женский).</param>
+            <param name="cityId">Id города из справочника.</param>
             <param name="search">Поиск по названию навыка.</param>
             <returns>Список карточек пользователей.</returns>
         </member>
@@ -174,6 +188,12 @@
         <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.DateOfBirth">
             <summary>Дата рождения (дд.мм.гггг).</summary>
         </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.GenderId">
+            <summary>Id пола из справочника (api/references/genders).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.CityId">
+            <summary>Id города из справочника (api/references/cities).</summary>
+        </member>
         <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.AvatarUrl">
             <summary>URL аватара (после загрузки) или null.</summary>
         </member>
@@ -191,6 +211,12 @@
         </member>
         <member name="P:SkillSwap.Api.Models.User.DateOfBirth">
             <summary>Дата рождения (дд.мм.гггг).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.User.CityId">
+            <summary>Id города из справочника (references/cities).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.User.GenderId">
+            <summary>Id пола из справочника (references/genders). 1 = Не указан, 2 = Мужской, 3 = Женский.</summary>
         </member>
         <member name="P:SkillSwap.Api.Models.User.TeachingSkillIds">
             <summary>Чему может научить (Учу)</summary>
@@ -291,8 +317,20 @@
         <member name="M:SkillSwap.Api.Services.MockDataStore.AddUserSkill(System.Int32,System.String,System.Int32,System.Int32,System.String,System.Collections.Generic.List{System.String})">
             <summary>Добавить навык пользователя (название, категория, подкатегория, описание, фото).</summary>
         </member>
-        <member name="M:SkillSwap.Api.Services.MockDataStore.AddUserByRegistration(System.String,System.String,System.String,System.Nullable{System.DateOnly},System.String,System.String,System.String,System.Collections.Generic.List{System.Int32})">
+        <member name="M:SkillSwap.Api.Services.MockDataStore.AddUserByRegistration(System.String,System.String,System.String,System.Nullable{System.DateOnly},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.Int32})">
             <summary>Регистрация нового пользователя (для Auth).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ReferenceService.GetGenders">
+            <summary>Справочник полов (для формы регистрации и фильтров).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ReferenceService.GetCities">
+            <summary>Справочник городов.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ReferenceService.GetGenderById(System.Int32)">
+            <summary>Пол по id.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.ReferenceService.GetCityById(System.Int32)">
+            <summary>Город по id.</summary>
         </member>
         <member name="M:SkillSwap.Api.Services.SkillService.GetCategories">
             <summary>Возвращает все категории навыков.</summary>
@@ -313,12 +351,12 @@
             <param name="id">Id навыка.</param>
             <returns>Навык или null.</returns>
         </member>
-        <member name="M:SkillSwap.Api.Services.UserService.GetUsers(System.String,System.Int32[],System.String,System.String,System.String)">
+        <member name="M:SkillSwap.Api.Services.UserService.GetUsers(System.String,System.Int32[],System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
             <summary>Возвращает список пользователей с фильтрацией по типу активности, навыкам, полу, городу и поиску по названию навыка.</summary>
             <param name="activityType">«Хочу научиться» или «Могу научить».</param>
             <param name="skillIds">Id навыков: показываются пользователи, у которых есть хотя бы один из них.</param>
-            <param name="gender">Пол: Мужской, Женский или «Не имеет значения».</param>
-            <param name="city">Город.</param>
+            <param name="genderId">Id пола из справочника (1=Не указан/не имеет значения, 2=Мужской, 3=Женский).</param>
+            <param name="cityId">Id города из справочника.</param>
             <param name="search">Поиск по названию навыка (в «Учу» или «Учусь»).</param>
             <returns>Список карточек пользователей.</returns>
         </member>

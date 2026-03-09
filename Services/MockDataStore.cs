@@ -11,6 +11,8 @@ public class MockDataStore
     public List<ExchangeSession> ExchangeSessions { get; } = new();
     public List<Favorite> Favorites { get; } = new();
     public List<UserSkill> UserSkills { get; } = new();
+    public List<Gender> Genders { get; } = new();
+    public List<City> Cities { get; } = new();
 
     private int _nextCategoryId = 1;
     private int _nextSkillId = 1;
@@ -51,7 +53,7 @@ public class MockDataStore
     }
 
     /// <summary>Регистрация нового пользователя (для Auth).</summary>
-    public User AddUserByRegistration(string email, string password, string name, DateOnly? dateOfBirth, string? gender, string? city, string? avatarUrl, List<int>? learningSkillIds)
+    public User AddUserByRegistration(string email, string password, string name, DateOnly? dateOfBirth, int? genderId, int? cityId, string? avatarUrl, List<int>? learningSkillIds)
     {
         var age = dateOfBirth.HasValue
             ? (int)((DateTime.Today - dateOfBirth.Value.ToDateTime(TimeOnly.MinValue)).TotalDays / 365.25)
@@ -62,9 +64,9 @@ public class MockDataStore
             Email = email.Trim(),
             Password = password,
             Name = name,
-            City = city ?? "",
+            CityId = cityId,
             Age = age,
-            Gender = gender ?? "Не указан",
+            GenderId = genderId ?? 1,
             DateOfBirth = dateOfBirth,
             AvatarUrl = avatarUrl,
             TeachingSkillIds = new List<int>(),
@@ -76,6 +78,59 @@ public class MockDataStore
 
     private void SeedData()
     {
+        // Справочник полов
+        Genders.AddRange(new[]
+        {
+            new Gender { Id = 1, Name = "Не указан" },
+            new Gender { Id = 2, Name = "Мужской" },
+            new Gender { Id = 3, Name = "Женский" }
+        });
+
+        // Справочник городов
+        Cities.AddRange(new[]
+        {
+            new City { Id = 1, Name = "Москва" },
+            new City { Id = 2, Name = "Санкт-Петербург" },
+            new City { Id = 3, Name = "Новосибирск" },
+            new City { Id = 4, Name = "Екатеринбург" },
+            new City { Id = 5, Name = "Казань" },
+            new City { Id = 6, Name = "Нижний Новгород" },
+            new City { Id = 7, Name = "Челябинск" },
+            new City { Id = 8, Name = "Самара" },
+            new City { Id = 9, Name = "Омск" },
+            new City { Id = 10, Name = "Ростов-на-Дону" },
+            new City { Id = 11, Name = "Уфа" },
+            new City { Id = 12, Name = "Красноярск" },
+            new City { Id = 13, Name = "Воронеж" },
+            new City { Id = 14, Name = "Пермь" },
+            new City { Id = 15, Name = "Волгоград" },
+            new City { Id = 16, Name = "Краснодар" },
+            new City { Id = 17, Name = "Саратов" },
+            new City { Id = 18, Name = "Тюмень" },
+            new City { Id = 19, Name = "Тольятти" },
+            new City { Id = 20, Name = "Ижевск" },
+            new City { Id = 21, Name = "Барнаул" },
+            new City { Id = 22, Name = "Иркутск" },
+            new City { Id = 23, Name = "Хабаровск" },
+            new City { Id = 24, Name = "Ярославль" },
+            new City { Id = 25, Name = "Владивосток" },
+            new City { Id = 26, Name = "Махачкала" },
+            new City { Id = 27, Name = "Томск" },
+            new City { Id = 28, Name = "Оренбург" },
+            new City { Id = 29, Name = "Кемерово" },
+            new City { Id = 30, Name = "Новокузнецк" },
+            new City { Id = 31, Name = "Рязань" },
+            new City { Id = 32, Name = "Астрахань" },
+            new City { Id = 33, Name = "Набережные Челны" },
+            new City { Id = 34, Name = "Пенза" },
+            new City { Id = 35, Name = "Калининград" },
+            new City { Id = 36, Name = "Липецк" },
+            new City { Id = 37, Name = "Тула" },
+            new City { Id = 38, Name = "Сочи" },
+            new City { Id = 39, Name = "Владикавказ" },
+            new City { Id = 40, Name = "Архангельск" }
+        });
+
         // Категории (порядок как в списке всех навыков)
         var catBiz = AddCategory("Бизнес и карьера");
         var catLang = AddCategory("Иностранные языки");
@@ -138,13 +193,13 @@ public class MockDataStore
         var sSleep = AddSkill("Сон и восстановление", catHealth.Id);
         var sWorkLifeBalance = AddSkill("Баланс жизни и работы", catHealth.Id);
 
-        // Пользователи (привязаны к навыкам и аватарам из wwwroot/Users)
-        var u1 = AddUser("Иван", "Санкт-Петербург", 34, "Мужской", new[] { sMusic.Id }, new[] { sTimeMgmt.Id, sYogaMeditation.Id }, avatarUrl: "/Users/Ivan_34_spb.jpg", email: "ivan@mail.ru", password: "test");
-        var u2 = AddUser("Анна", "Казань", 26, "Женский", new[] { sEnglish.Id, sEntrepreneurship.Id }, new[] { sYogaMeditation.Id }, avatarUrl: "/Users/Anna_26_kaz.jpg", email: "anna@mail.ru", password: "test");
-        var u3 = AddUser("Максим", "Москва", 23, "Мужской", new[] { sPhoto.Id }, new[] { sSpanish.Id, sYogaMeditation.Id }, avatarUrl: "/Users/Maksim_23_msk.jpg", email: "maksim@mail.ru", password: "test");
-        var u4 = AddUser("Елена", "Новосибирск", 30, "Женский", new[] { sCooking.Id, sYogaMeditation.Id }, new[] { sEnglish.Id }, avatarUrl: "/Users/Elena_28_krasn.jpg", email: "elena@mail.ru", password: "test");
-        var u5 = AddUser("Дмитрий", "Екатеринбург", 28, "Мужской", new[] { sTimeMgmt.Id }, new[] { sMusic.Id }, avatarUrl: "/Users/Dmitry_28_msk.jpg", email: "dmitry@mail.ru", password: "test");
-        var u6 = AddUser("Ольга", "Москва", 25, "Женский", new[] { sYogaMeditation.Id }, new[] { sEntrepreneurship.Id, sPhoto.Id }, avatarUrl: "/Users/Olga_27_spb.jpg", email: "olga@mail.ru", password: "test");
+        // Пользователи (CityId: 1=Москва, 2=СПб, 3=Новосибирск, 4=Екатеринбург, 5=Казань; GenderId: 1=Не указан, 2=Мужской, 3=Женский)
+        var u1 = AddUser("Иван", 34, 2, 2, new[] { sMusic.Id }, new[] { sTimeMgmt.Id, sYogaMeditation.Id }, avatarUrl: "/Users/Ivan_34_spb.jpg", email: "ivan@mail.ru", password: "test");   // СПб, Мужской
+        var u2 = AddUser("Анна", 26, 5, 3, new[] { sEnglish.Id, sEntrepreneurship.Id }, new[] { sYogaMeditation.Id }, avatarUrl: "/Users/Anna_26_kaz.jpg", email: "anna@mail.ru", password: "test");   // Казань, Женский
+        var u3 = AddUser("Максим", 23, 1, 2, new[] { sPhoto.Id }, new[] { sSpanish.Id, sYogaMeditation.Id }, avatarUrl: "/Users/Maksim_23_msk.jpg", email: "maksim@mail.ru", password: "test");  // Москва, Мужской
+        var u4 = AddUser("Елена", 30, 3, 3, new[] { sCooking.Id, sYogaMeditation.Id }, new[] { sEnglish.Id }, avatarUrl: "/Users/Elena_28_krasn.jpg", email: "elena@mail.ru", password: "test");  // Новосибирск, Женский
+        var u5 = AddUser("Дмитрий", 28, 4, 2, new[] { sTimeMgmt.Id }, new[] { sMusic.Id }, avatarUrl: "/Users/Dmitry_28_msk.jpg", email: "dmitry@mail.ru", password: "test");  // Екатеринбург, Мужской
+        var u6 = AddUser("Ольга", 25, 1, 3, new[] { sYogaMeditation.Id }, new[] { sEntrepreneurship.Id, sPhoto.Id }, avatarUrl: "/Users/Olga_27_spb.jpg", email: "olga@mail.ru", password: "test");  // Москва, Женский
 
         // Заявки на обмен
         ExchangeRequests.Add(new ExchangeRequest
@@ -210,7 +265,7 @@ public class MockDataStore
         return s;
     }
 
-    private User AddUser(string name, string city, int age, string gender, int[] teaching, int[] learning, string? avatarUrl = null, string? email = null, string? password = null, DateOnly? dateOfBirth = null)
+    private User AddUser(string name, int age, int cityId, int genderId, int[] teaching, int[] learning, string? avatarUrl = null, string? email = null, string? password = null, DateOnly? dateOfBirth = null)
     {
         var id = NextUserId();
         var u = new User
@@ -219,9 +274,9 @@ public class MockDataStore
             Email = !string.IsNullOrEmpty(email) ? email : $"user{id}@test.local",
             Password = password ?? "test",
             Name = name,
-            City = city,
+            CityId = cityId,
             Age = age,
-            Gender = gender,
+            GenderId = genderId,
             DateOfBirth = dateOfBirth,
             AvatarUrl = avatarUrl,
             TeachingSkillIds = teaching.ToList(),

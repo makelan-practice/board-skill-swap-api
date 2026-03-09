@@ -12,11 +12,11 @@ public class UserService
     /// <summary>Возвращает список пользователей с фильтрацией по типу активности, навыкам, полу, городу и поиску по названию навыка.</summary>
     /// <param name="activityType">«Хочу научиться» или «Могу научить».</param>
     /// <param name="skillIds">Id навыков: показываются пользователи, у которых есть хотя бы один из них.</param>
-    /// <param name="gender">Пол: Мужской, Женский или «Не имеет значения».</param>
-    /// <param name="city">Город.</param>
+    /// <param name="genderId">Id пола из справочника (1=Не указан/не имеет значения, 2=Мужской, 3=Женский).</param>
+    /// <param name="cityId">Id города из справочника.</param>
     /// <param name="search">Поиск по названию навыка (в «Учу» или «Учусь»).</param>
     /// <returns>Список карточек пользователей.</returns>
-    public IEnumerable<UserCardDto> GetUsers(string? activityType = null, int[]? skillIds = null, string? gender = null, string? city = null, string? search = null)
+    public IEnumerable<UserCardDto> GetUsers(string? activityType = null, int[]? skillIds = null, int? genderId = null, int? cityId = null, string? search = null)
     {
         var users = _store.Users.AsEnumerable();
         if (!string.IsNullOrWhiteSpace(search))
@@ -43,11 +43,11 @@ public class UserService
                 u.TeachingSkillIds.Any(id => skillIds.Contains(id)) ||
                 u.LearningSkillIds.Any(id => skillIds.Contains(id)));
 
-        if (!string.IsNullOrEmpty(gender) && !gender.Equals("Не имеет значения", StringComparison.OrdinalIgnoreCase))
-            users = users.Where(u => string.Equals(u.Gender, gender, StringComparison.OrdinalIgnoreCase));
+        if (genderId.HasValue && genderId.Value != 1) // 1 = Не указан / не имеет значения
+            users = users.Where(u => u.GenderId == genderId.Value);
 
-        if (!string.IsNullOrEmpty(city))
-            users = users.Where(u => u.City.Equals(city, StringComparison.OrdinalIgnoreCase));
+        if (cityId.HasValue)
+            users = users.Where(u => u.CityId == cityId.Value);
 
         return users.Select(ToUserCardDto);
     }
@@ -103,12 +103,17 @@ public class UserService
     private UserCardDto ToUserCardDto(User u)
     {
         string SkillName(int id) => _store.Skills.FirstOrDefault(s => s.Id == id)?.Name ?? "";
+        var city = u.CityId.HasValue ? _store.Cities.FirstOrDefault(c => c.Id == u.CityId.Value)?.Name ?? "" : "";
+        var gender = _store.Genders.FirstOrDefault(g => g.Id == u.GenderId)?.Name ?? "";
         return new UserCardDto
         {
             Id = u.Id,
             Name = u.Name,
-            City = u.City,
+            CityId = u.CityId,
+            City = city,
             Age = u.Age,
+            GenderId = u.GenderId,
+            Gender = gender,
             AvatarUrl = u.AvatarUrl,
             CanTeach = u.TeachingSkillIds.Select(SkillName).Where(n => n != "").ToList(),
             WantsToLearn = u.LearningSkillIds.Select(SkillName).Where(n => n != "").ToList()

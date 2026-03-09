@@ -10,9 +10,11 @@ public class User
     public string Name { get; set; } = string.Empty;
     /// <summary>Дата рождения (дд.мм.гггг).</summary>
     public DateOnly? DateOfBirth { get; set; }
-    public string City { get; set; } = string.Empty;
+    /// <summary>Id города из справочника (references/cities).</summary>
+    public int? CityId { get; set; }
     public int Age { get; set; }
-    public string Gender { get; set; } = "Не указан"; // Мужской, Женский
+    /// <summary>Id пола из справочника (references/genders). 1 = Не указан, 2 = Мужской, 3 = Женский.</summary>
+    public int GenderId { get; set; } = 1;
     public string? AvatarUrl { get; set; }
     /// <summary>Чему может научить (Учу)</summary>
     public List<int> TeachingSkillIds { get; set; } = new();

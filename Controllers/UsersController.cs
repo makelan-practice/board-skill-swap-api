@@ -19,19 +19,19 @@ public class UsersController : ControllerBase
     /// <summary>Список пользователей с фильтрами (тип активности, навыки, пол, город, поиск по навыку).</summary>
     /// <param name="activityType">«Хочу научиться» или «Могу научить».</param>
     /// <param name="skillIds">Id навыков.</param>
-    /// <param name="gender">Пол: Мужской, Женский, Не имеет значения.</param>
-    /// <param name="city">Город.</param>
+    /// <param name="genderId">Id пола из справочника (1=не имеет значения, 2=Мужской, 3=Женский).</param>
+    /// <param name="cityId">Id города из справочника.</param>
     /// <param name="search">Поиск по названию навыка.</param>
     /// <returns>Список карточек пользователей.</returns>
     [HttpGet]
     public IActionResult GetUsers(
         [FromQuery] string? activityType,
         [FromQuery] int[]? skillIds,
-        [FromQuery] string? gender,
-        [FromQuery] string? city,
+        [FromQuery] int? genderId,
+        [FromQuery] int? cityId,
         [FromQuery] string? search)
     {
-        var list = _userService.GetUsers(activityType, skillIds, gender, city, search);
+        var list = _userService.GetUsers(activityType, skillIds, genderId, cityId, search);
         return Ok(list);
     }
 

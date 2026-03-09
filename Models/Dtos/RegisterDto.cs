@@ -8,8 +8,10 @@ public class RegisterDto
     public string Name { get; set; } = string.Empty;
     /// <summary>Дата рождения (дд.мм.гггг).</summary>
     public DateOnly? DateOfBirth { get; set; }
-    public string? Gender { get; set; }
-    public string? City { get; set; }
+    /// <summary>Id пола из справочника (api/references/genders).</summary>
+    public int? GenderId { get; set; }
+    /// <summary>Id города из справочника (api/references/cities).</summary>
+    public int? CityId { get; set; }
     /// <summary>URL аватара (после загрузки) или null.</summary>
     public string? AvatarUrl { get; set; }
     /// <summary>Id навыков, которым хочет научиться (Учусь).</summary>

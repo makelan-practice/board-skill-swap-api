@@ -40,8 +40,8 @@ public class AuthService
             dto.Password,
             dto.Name.Trim(),
             dto.DateOfBirth,
-            dto.Gender,
-            dto.City,
+            dto.GenderId,
+            dto.CityId,
             dto.AvatarUrl,
             dto.LearningSkillIds
         );
