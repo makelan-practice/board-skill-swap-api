@@ -2,7 +2,7 @@
 
 Веб-API на C# (ASP.NET Core 8) для учебного проекта **SkillSwap** — обмен навыками между пользователями. Работает как мок-сервер: данные хранятся в памяти, база данных не используется.
 
-## Запуск
+## Запуск локально
 
 ```bash
 dotnet run
@@ -11,6 +11,39 @@ dotnet run
 После запуска:
 - API: **http://localhost:5287**
 - Swagger UI: **http://localhost:5287/swagger**
+
+## Docker
+
+Сборка образа:
+
+```bash
+docker build -t skillswap-api:latest .
+```
+
+Запуск контейнера:
+
+```bash
+docker run -d -p 8080:80 --name skillswap-api skillswap-api:latest
+```
+
+Или через docker-compose:
+
+```bash
+docker-compose up -d
+```
+
+API будет доступен на **http://localhost:8080**, Swagger — **http://localhost:8080/swagger**.
+
+## Деплой на Linux-сервер
+
+1. Установите Docker и Docker Compose на сервере.
+2. Склонируйте репозиторий или скопируйте файлы проекта (включая `Dockerfile`, `docker-compose.yml`, `wwwroot` с аватарами).
+3. В каталоге проекта выполните:
+   ```bash
+   docker-compose up -d --build
+   ```
+4. Порт 8080 будет слушать API. Чтобы слушать на 80 или за nginx, измените в `docker-compose.yml` порты на `"80:80"` или настройте reverse proxy.
+5. Для доступа снаружи откройте порт в файрволе (например, `ufw allow 8080`).
 
 ## Основные сущности
 
@@ -26,7 +59,7 @@ dotnet run
 ### Пользователи `GET/POST /api/users`
 | Метод | Путь | Описание |
 |-------|------|----------|
-| GET | `/api/users` | Список с фильтрами: `activityType`, `skillIds`, `gender`, `city`, `search` |
+| GET | `/api/users` | Список с фильтрами: `activityType`, `skillIds`, `genderId`, `cityId`, `search` |
 | GET | `/api/users/{id}` | Карточка пользователя |
 | GET | `/api/users/popular?count=6` | Популярные |
 | GET | `/api/users/new?count=6` | Новые |
