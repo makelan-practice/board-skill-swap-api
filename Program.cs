@@ -35,11 +35,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// API и Swagger доступны и в Production (для документации на сервере)
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors();
 app.UseStaticFiles(); // статические файлы из wwwroot (аватары: /Users/...)
