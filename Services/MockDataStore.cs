@@ -10,6 +10,7 @@ public class MockDataStore
     public List<ExchangeRequest> ExchangeRequests { get; } = new();
     public List<ExchangeSession> ExchangeSessions { get; } = new();
     public List<Favorite> Favorites { get; } = new();
+    public List<UserSkill> UserSkills { get; } = new();
 
     private int _nextCategoryId = 1;
     private int _nextSkillId = 1;
@@ -17,6 +18,7 @@ public class MockDataStore
     private int _nextRequestId = 1;
     private int _nextSessionId = 1;
     private int _nextFavoriteId = 1;
+    private int _nextUserSkillId = 1;
 
     public MockDataStore()
     {
@@ -29,6 +31,48 @@ public class MockDataStore
     public int NextRequestId() => _nextRequestId++;
     public int NextSessionId() => _nextSessionId++;
     public int NextFavoriteId() => _nextFavoriteId++;
+    public int NextUserSkillId() => _nextUserSkillId++;
+
+    /// <summary>Добавить навык пользователя (название, категория, подкатегория, описание, фото).</summary>
+    public UserSkill AddUserSkill(int userId, string title, int categoryId, int skillId, string? description, List<string>? imageUrls)
+    {
+        var us = new UserSkill
+        {
+            Id = NextUserSkillId(),
+            UserId = userId,
+            Title = title,
+            CategoryId = categoryId,
+            SkillId = skillId,
+            Description = description,
+            ImageUrls = imageUrls ?? new List<string>()
+        };
+        UserSkills.Add(us);
+        return us;
+    }
+
+    /// <summary>Регистрация нового пользователя (для Auth).</summary>
+    public User AddUserByRegistration(string email, string password, string name, DateOnly? dateOfBirth, string? gender, string? city, string? avatarUrl, List<int>? learningSkillIds)
+    {
+        var age = dateOfBirth.HasValue
+            ? (int)((DateTime.Today - dateOfBirth.Value.ToDateTime(TimeOnly.MinValue)).TotalDays / 365.25)
+            : 0;
+        var u = new User
+        {
+            Id = NextUserId(),
+            Email = email.Trim(),
+            Password = password,
+            Name = name,
+            City = city ?? "",
+            Age = age,
+            Gender = gender ?? "Не указан",
+            DateOfBirth = dateOfBirth,
+            AvatarUrl = avatarUrl,
+            TeachingSkillIds = new List<int>(),
+            LearningSkillIds = learningSkillIds ?? new List<int>()
+        };
+        Users.Add(u);
+        return u;
+    }
 
     private void SeedData()
     {
@@ -95,12 +139,12 @@ public class MockDataStore
         var sWorkLifeBalance = AddSkill("Баланс жизни и работы", catHealth.Id);
 
         // Пользователи (привязаны к навыкам и аватарам из wwwroot/Users)
-        var u1 = AddUser("Иван", "Санкт-Петербург", 34, "Мужской", new[] { sMusic.Id }, new[] { sTimeMgmt.Id, sYogaMeditation.Id }, "/Users/Ivan_34_spb.jpg");
-        var u2 = AddUser("Анна", "Казань", 26, "Женский", new[] { sEnglish.Id, sEntrepreneurship.Id }, new[] { sYogaMeditation.Id }, "/Users/Anna_26_kaz.jpg");
-        var u3 = AddUser("Максим", "Москва", 23, "Мужской", new[] { sPhoto.Id }, new[] { sSpanish.Id, sYogaMeditation.Id }, "/Users/Maksim_23_msk.jpg");
-        var u4 = AddUser("Елена", "Новосибирск", 30, "Женский", new[] { sCooking.Id, sYogaMeditation.Id }, new[] { sEnglish.Id }, "/Users/Elena_28_krasn.jpg");
-        var u5 = AddUser("Дмитрий", "Екатеринбург", 28, "Мужской", new[] { sTimeMgmt.Id }, new[] { sMusic.Id }, "/Users/Dmitry_28_msk.jpg");
-        var u6 = AddUser("Ольга", "Москва", 25, "Женский", new[] { sYogaMeditation.Id }, new[] { sEntrepreneurship.Id, sPhoto.Id }, "/Users/Olga_27_spb.jpg");
+        var u1 = AddUser("Иван", "Санкт-Петербург", 34, "Мужской", new[] { sMusic.Id }, new[] { sTimeMgmt.Id, sYogaMeditation.Id }, avatarUrl: "/Users/Ivan_34_spb.jpg", email: "ivan@mail.ru", password: "test");
+        var u2 = AddUser("Анна", "Казань", 26, "Женский", new[] { sEnglish.Id, sEntrepreneurship.Id }, new[] { sYogaMeditation.Id }, avatarUrl: "/Users/Anna_26_kaz.jpg", email: "anna@mail.ru", password: "test");
+        var u3 = AddUser("Максим", "Москва", 23, "Мужской", new[] { sPhoto.Id }, new[] { sSpanish.Id, sYogaMeditation.Id }, avatarUrl: "/Users/Maksim_23_msk.jpg", email: "maksim@mail.ru", password: "test");
+        var u4 = AddUser("Елена", "Новосибирск", 30, "Женский", new[] { sCooking.Id, sYogaMeditation.Id }, new[] { sEnglish.Id }, avatarUrl: "/Users/Elena_28_krasn.jpg", email: "elena@mail.ru", password: "test");
+        var u5 = AddUser("Дмитрий", "Екатеринбург", 28, "Мужской", new[] { sTimeMgmt.Id }, new[] { sMusic.Id }, avatarUrl: "/Users/Dmitry_28_msk.jpg", email: "dmitry@mail.ru", password: "test");
+        var u6 = AddUser("Ольга", "Москва", 25, "Женский", new[] { sYogaMeditation.Id }, new[] { sEntrepreneurship.Id, sPhoto.Id }, avatarUrl: "/Users/Olga_27_spb.jpg", email: "olga@mail.ru", password: "test");
 
         // Заявки на обмен
         ExchangeRequests.Add(new ExchangeRequest
@@ -128,6 +172,28 @@ public class MockDataStore
         // Избранное
         Favorites.Add(new Favorite { Id = NextFavoriteId(), UserId = u1.Id, TargetUserId = u2.Id, AddedAt = DateTime.UtcNow.AddDays(-1) });
         Favorites.Add(new Favorite { Id = NextFavoriteId(), UserId = u1.Id, TargetUserId = u4.Id, AddedAt = DateTime.UtcNow });
+
+        // Навыки пользователей (название, категория, подкатегория, описание, фото)
+        UserSkills.Add(new UserSkill
+        {
+            Id = NextUserSkillId(),
+            UserId = u1.Id,
+            Title = "Игра на ударных",
+            CategoryId = catArt.Id,
+            SkillId = sMusic.Id,
+            Description = "Научу базовой постановке рук и простым ритмам. Индивидуальные занятия.",
+            ImageUrls = new List<string> { "/Skills/drums_1.jpg" }
+        });
+        UserSkills.Add(new UserSkill
+        {
+            Id = NextUserSkillId(),
+            UserId = u3.Id,
+            Title = "Портретная съёмка",
+            CategoryId = catArt.Id,
+            SkillId = sPhoto.Id,
+            Description = "Основы композиции и света для портретов. Выезд на локации.",
+            ImageUrls = new List<string> { "/Skills/photo_skill_1.jpg", "/Skills/photo_skill_2.jpg" }
+        });
     }
 
     private Category AddCategory(string name)
@@ -144,15 +210,19 @@ public class MockDataStore
         return s;
     }
 
-    private User AddUser(string name, string city, int age, string gender, int[] teaching, int[] learning, string? avatarUrl = null)
+    private User AddUser(string name, string city, int age, string gender, int[] teaching, int[] learning, string? avatarUrl = null, string? email = null, string? password = null, DateOnly? dateOfBirth = null)
     {
+        var id = NextUserId();
         var u = new User
         {
-            Id = NextUserId(),
+            Id = id,
+            Email = !string.IsNullOrEmpty(email) ? email : $"user{id}@test.local",
+            Password = password ?? "test",
             Name = name,
             City = city,
             Age = age,
             Gender = gender,
+            DateOfBirth = dateOfBirth,
             AvatarUrl = avatarUrl,
             TeachingSkillIds = teaching.ToList(),
             LearningSkillIds = learning.ToList()

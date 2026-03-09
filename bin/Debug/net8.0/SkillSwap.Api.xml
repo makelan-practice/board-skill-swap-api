@@ -4,6 +4,13 @@
         <name>SkillSwap.Api</name>
     </assembly>
     <members>
+        <member name="M:SkillSwap.Api.Controllers.AuthController.Register(SkillSwap.Api.Models.Dtos.RegisterDto)">
+            <summary>Регистрация по расширенной форме (email, пароль, имя, дата рождения, пол, город, аватар, навыки «Учусь»).</summary>
+            <remarks>Ошибки: Email уже используется — 409 + ErrorCode "EmailAlreadyExists". Пароль &lt; 8 знаков — 400 + "PasswordTooShort".</remarks>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.AuthController.Login(SkillSwap.Api.Models.Dtos.LoginDto)">
+            <summary>Вход по email и паролю. Возвращает данные пользователя и мок-токен.</summary>
+        </member>
         <member name="M:SkillSwap.Api.Controllers.ExchangeRequestsController.GetRequests(System.Nullable{System.Int32},System.String)">
             <summary>Список заявок (по userId и/или status).</summary>
             <param name="userId">Id пользователя (отправитель или получатель).</param>
@@ -131,11 +138,92 @@
             <param name="count">Количество записей (по умолчанию 6).</param>
             <returns>Список карточек пользователей.</returns>
         </member>
+        <member name="M:SkillSwap.Api.Controllers.UserSkillsController.GetUserSkills(System.Int32)">
+            <summary>Список навыков пользователя (название, категория, подкатегория, описание, фото).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UserSkillsController.GetUserSkill(System.Int32,System.Int32)">
+            <summary>Один навык по id.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UserSkillsController.CreateUserSkill(System.Int32,SkillSwap.Api.Models.Dtos.CreateUserSkillDto)">
+            <summary>Создать навык пользователя (форма: название, категория, подкатегория, описание, изображения).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UserSkillsController.UpdateUserSkill(System.Int32,System.Int32,SkillSwap.Api.Models.Dtos.CreateUserSkillDto)">
+            <summary>Обновить навык пользователя.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UserSkillsController.DeleteUserSkill(System.Int32,System.Int32)">
+            <summary>Удалить навык пользователя.</summary>
+        </member>
+        <member name="T:SkillSwap.Api.Models.Dtos.CreateUserSkillDto">
+            <summary>Создание/редактирование навыка пользователя (форма: название, категория, подкатегория, описание, фото).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.CreateUserSkillDto.ImageUrls">
+            <summary>URL загруженных изображений навыка (после загрузки через API или статику).</summary>
+        </member>
+        <member name="T:SkillSwap.Api.Models.Dtos.LoginDto">
+            <summary>Тело запроса входа.</summary>
+        </member>
+        <member name="T:SkillSwap.Api.Models.Dtos.LoginResponseDto">
+            <summary>Ответ после успешного входа.</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.LoginResponseDto.Token">
+            <summary>Мок-токен (в боевом API — JWT).</summary>
+        </member>
+        <member name="T:SkillSwap.Api.Models.Dtos.RegisterDto">
+            <summary>Тело запроса регистрации (расширенная форма).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.DateOfBirth">
+            <summary>Дата рождения (дд.мм.гггг).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.AvatarUrl">
+            <summary>URL аватара (после загрузки) или null.</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.LearningSkillIds">
+            <summary>Id навыков, которым хочет научиться (Учусь).</summary>
+        </member>
+        <member name="T:SkillSwap.Api.Models.Dtos.UserSkillDto">
+            <summary>Навык пользователя в ответе API (с названиями категории и подкатегории).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.User.Email">
+            <summary>Email для входа (уникальный).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.User.Password">
+            <summary>Пароль (в моке хранится в открытом виде; в боевом — только хэш).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.User.DateOfBirth">
+            <summary>Дата рождения (дд.мм.гггг).</summary>
+        </member>
         <member name="P:SkillSwap.Api.Models.User.TeachingSkillIds">
             <summary>Чему может научить (Учу)</summary>
         </member>
         <member name="P:SkillSwap.Api.Models.User.LearningSkillIds">
             <summary>Чему хочет научиться (Учусь)</summary>
+        </member>
+        <member name="T:SkillSwap.Api.Models.UserSkill">
+            <summary>Навык, который пользователь предлагает (Учу): название, категория, подкатегория, описание, фото.</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.UserSkill.Title">
+            <summary>Название навыка (как пользователь его назвал).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.UserSkill.SkillId">
+            <summary>Подкатегория — id навыка из справочника Skills.</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.UserSkill.Description">
+            <summary>Коротко опишите, чему можете научить.</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.UserSkill.ImageUrls">
+            <summary>URL изображений навыка (загруженные фото).</summary>
+        </member>
+        <member name="T:SkillSwap.Api.Services.RegisterResult">
+            <summary>Результат регистрации: успех с пользователем или ошибка.</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Services.RegisterResult.ErrorCode">
+            <summary>Код ошибки: "EmailAlreadyExists", "PasswordTooShort".</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.AuthService.Register(SkillSwap.Api.Models.Dtos.RegisterDto)">
+            <summary>Регистрация по расширенной форме. Проверяет уникальность email и длину пароля (не менее 8 символов).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.AuthService.Login(SkillSwap.Api.Models.Dtos.LoginDto)">
+            <summary>Вход по email и паролю. Возвращает данные пользователя и мок-токен или null.</summary>
         </member>
         <member name="M:SkillSwap.Api.Services.ExchangeRequestService.GetRequests(System.Nullable{System.Int32},System.String)">
             <summary>Возвращает список заявок на обмен с опциональной фильтрацией по пользователю и статусу.</summary>
@@ -200,6 +288,12 @@
             <param name="maxCount">Максимальное количество пар.</param>
             <returns>Список пар: пользователь и названия навыков обмена.</returns>
         </member>
+        <member name="M:SkillSwap.Api.Services.MockDataStore.AddUserSkill(System.Int32,System.String,System.Int32,System.Int32,System.String,System.Collections.Generic.List{System.String})">
+            <summary>Добавить навык пользователя (название, категория, подкатегория, описание, фото).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.MockDataStore.AddUserByRegistration(System.String,System.String,System.String,System.Nullable{System.DateOnly},System.String,System.String,System.String,System.Collections.Generic.List{System.Int32})">
+            <summary>Регистрация нового пользователя (для Auth).</summary>
+        </member>
         <member name="M:SkillSwap.Api.Services.SkillService.GetCategories">
             <summary>Возвращает все категории навыков.</summary>
         </member>
@@ -248,6 +342,21 @@
             <param name="userId">Id текущего пользователя.</param>
             <param name="count">Максимальное количество записей.</param>
             <returns>Список карточек пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserSkillService.GetByUserId(System.Int32)">
+            <summary>Список навыков пользователя (Учу — с описанием и фото).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserSkillService.GetById(System.Int32)">
+            <summary>Один навык пользователя по id.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserSkillService.Create(System.Int32,SkillSwap.Api.Models.Dtos.CreateUserSkillDto)">
+            <summary>Создать навык пользователя (название, категория, подкатегория, описание, изображения).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserSkillService.Update(System.Int32,System.Int32,SkillSwap.Api.Models.Dtos.CreateUserSkillDto)">
+            <summary>Обновить навык пользователя.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserSkillService.Delete(System.Int32,System.Int32)">
+            <summary>Удалить навык пользователя.</summary>
         </member>
     </members>
 </doc>

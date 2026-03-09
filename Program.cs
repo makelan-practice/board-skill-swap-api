@@ -16,6 +16,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSingleton<MockDataStore>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<SkillService>();
+builder.Services.AddScoped<UserSkillService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ExchangeRequestService>();
 builder.Services.AddScoped<ExchangeSessionService>();
 builder.Services.AddScoped<FavoriteService>();

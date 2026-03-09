@@ -1,0 +1,70 @@
+using SkillSwap.Api.Models;
+using SkillSwap.Api.Models.Dtos;
+
+namespace SkillSwap.Api.Services;
+
+/// <summary>Результат регистрации: успех с пользователем или ошибка.</summary>
+public class RegisterResult
+{
+    public bool Success { get; set; }
+    public User? User { get; set; }
+    /// <summary>Код ошибки: "EmailAlreadyExists", "PasswordTooShort".</summary>
+    public string? ErrorCode { get; set; }
+    public string? ErrorMessage { get; set; }
+}
+
+public class AuthService
+{
+    private readonly MockDataStore _store;
+
+    public AuthService(MockDataStore store) => _store = store;
+
+    /// <summary>Регистрация по расширенной форме. Проверяет уникальность email и длину пароля (не менее 8 символов).</summary>
+    public RegisterResult Register(RegisterDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Email))
+            return new RegisterResult { Success = false, ErrorCode = "EmailRequired", ErrorMessage = "Email обязателен" };
+
+        var email = dto.Email.Trim().ToLowerInvariant();
+        if (_store.Users.Any(u => u.Email.Trim().ToLowerInvariant() == email))
+            return new RegisterResult { Success = false, ErrorCode = "EmailAlreadyExists", ErrorMessage = "Email уже используется" };
+
+        if (string.IsNullOrEmpty(dto.Password) || dto.Password.Length < 8)
+            return new RegisterResult { Success = false, ErrorCode = "PasswordTooShort", ErrorMessage = "Пароль должен содержать не менее 8 знаков" };
+
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            return new RegisterResult { Success = false, ErrorCode = "NameRequired", ErrorMessage = "Имя обязательно" };
+
+        var user = _store.AddUserByRegistration(
+            dto.Email.Trim(),
+            dto.Password,
+            dto.Name.Trim(),
+            dto.DateOfBirth,
+            dto.Gender,
+            dto.City,
+            dto.AvatarUrl,
+            dto.LearningSkillIds
+        );
+        return new RegisterResult { Success = true, User = user };
+    }
+
+    /// <summary>Вход по email и паролю. Возвращает данные пользователя и мок-токен или null.</summary>
+    public LoginResponseDto? Login(LoginDto dto)
+    {
+        var email = dto.Email?.Trim().ToLowerInvariant();
+        if (string.IsNullOrEmpty(email)) return null;
+
+        var user = _store.Users.FirstOrDefault(u =>
+            u.Email.Trim().ToLowerInvariant() == email && u.Password == dto.Password);
+        if (user == null) return null;
+
+        return new LoginResponseDto
+        {
+            UserId = user.Id,
+            Email = user.Email,
+            Name = user.Name,
+            AvatarUrl = user.AvatarUrl,
+            Token = $"mock-token-{user.Id}-{Guid.NewGuid():N}"
+        };
+    }
+}
