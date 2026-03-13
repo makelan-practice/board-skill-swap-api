@@ -40,8 +40,9 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 2. Склонируйте репозиторий или скопируйте файлы проекта (включая `Dockerfile`, `docker-compose.yml`, `wwwroot` с аватарами).
 3. В каталоге проекта выполните:
    ```bash
-   docker-compose up -d --build
+   docker compose up -d --build
    ```
+   (Если установлен плагин Compose — команда с пробелом: `docker compose`. Иначе: `docker-compose`.)
 4. Порт 8080 будет слушать API. Чтобы слушать на 80 или за nginx, измените в `docker-compose.yml` порты на `"80:80"` или настройте reverse proxy.
 5. Для доступа снаружи откройте порт в файрволе (например, `ufw allow 8080`).
 
@@ -230,3 +231,55 @@ DELETE http://localhost:5287/api/notifications/clear-viewed?userId=2
 ### Web SSH
 
 - В панели хостинга есть вход по Web SSH (браузерный терминал). Пароль и ссылку смотрите в панели управления тарифом. Альтернатива — обычный SSH с вашего ПК: `ssh root@81.176.228.41`.
+
+---
+
+## Памятка по работе с сервером
+
+### Подключение
+```bash
+ssh root@81.176.228.41
+```
+
+### Путь к проекту
+- Каталог проекта: **`/root/board-skill-swap-api`** (или `~/board-skill-swap-api`).
+- Не путать с `/board-skill-swap-api` (такой папки нет — проект в домашней папке root).
+
+### Первый раз: клонирование и запуск
+```bash
+cd /root
+git clone https://github.com/makelan-practice/board-skill-swap-api.git board-skill-swap-api
+cd board-skill-swap-api
+docker compose up -d --build
+```
+> На сервере установлен Docker Compose как плагин — команда **`docker compose`** (с пробелом), не `docker-compose`.
+
+### Обновление после изменений в репозитории
+После того как вы запушили изменения на GitHub:
+```bash
+cd /root/board-skill-swap-api
+git pull
+docker compose up -d --build
+```
+
+### Гарантированно заменить старый контейнер
+Если контейнер когда-то запускали из другой папки и он остался висеть:
+```bash
+docker stop skillswap-api
+docker rm skillswap-api
+cd /root/board-skill-swap-api
+docker compose up -d --build
+```
+
+### Полезные команды
+| Действие | Команда |
+|----------|--------|
+| Зайти в каталог проекта | `cd /root/board-skill-swap-api` |
+| Список контейнеров | `docker ps` |
+| Логи API | `docker compose logs -f api` (из каталога проекта) |
+| Остановить контейнеры | `cd /root/board-skill-swap-api` → `docker compose down` |
+| Проверить версию Compose | `docker compose version` |
+
+### Ссылки после деплоя
+- API: **http://81.176.228.41:8080**
+- Swagger: **http://81.176.228.41:8080/swagger**
