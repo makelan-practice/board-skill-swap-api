@@ -201,6 +201,19 @@ public class MockDataStore
         var u5 = AddUser("Дмитрий", 28, 4, 2, new[] { sTimeMgmt.Id }, new[] { sMusic.Id }, avatarUrl: "/Users/Dmitry_28_msk.jpg", email: "dmitry@mail.ru", password: "test");  // Екатеринбург, Мужской
         var u6 = AddUser("Ольга", 25, 1, 3, new[] { sYogaMeditation.Id }, new[] { sEntrepreneurship.Id, sPhoto.Id }, avatarUrl: "/Users/Olga_27_spb.jpg", email: "olga@mail.ru", password: "test");  // Москва, Женский
 
+        // Новые пользователи (аватары из wwwroot/Users)
+        var u7 = AddUser("Кирилл", 24, 1, 2, new[] { sPhoto.Id, sTimeMgmt.Id }, new[] { sEnglish.Id }, avatarUrl: "/Users/Kirill_24_msk.jpg", email: "kirill@mail.ru", password: "test");           // Москва, Мужской
+        var u8 = AddUser("Наталия", 27, 2, 3, new[] { sSpanish.Id, sCooking.Id }, new[] { sYogaMeditation.Id, sPhoto.Id }, avatarUrl: "/Users/Natalia_27_spb.jpg", email: "natalia@mail.ru", password: "test");   // СПб, Женский
+        var u9 = AddUser("Григорий", 30, 5, 2, new[] { sEntrepreneurship.Id }, new[] { sEnglish.Id, sTimeMgmt.Id }, avatarUrl: "/Users/Grigory_30_kaz.jpg", email: "grigory@mail.ru", password: "test");   // Казань, Мужской
+        var u10 = AddUser("Татьяна", 25, 4, 3, new[] { sYogaMeditation.Id, sNutrition.Id }, new[] { sCooking.Id }, avatarUrl: "/Users/Tatyana_25_ekb.jpg", email: "tatyana@mail.ru", password: "test");   // Екатеринбург, Женский
+        var u11 = AddUser("Денис", 32, 3, 2, new[] { sMusic.Id, sProjectMgmt.Id }, new[] { sSpanish.Id }, avatarUrl: "/Users/Denis_32_novosib.jpg", email: "denis@mail.ru", password: "test");   // Новосибирск, Мужской
+        var u12 = AddUser("Ирина", 23, 38, 3, new[] { sCooking.Id }, new[] { sPhoto.Id, sEnglish.Id }, avatarUrl: "/Users/Irina_23_sochi.jpg", email: "irina@mail.ru", password: "test");   // Сочи, Женский
+        var u13 = AddUser("Богдан", 28, 14, 2, new[] { sTimeMgmt.Id, sCoaching.Id }, new[] { sMusic.Id }, avatarUrl: "/Users/Bogdan_28_perm.jpg", email: "bogdan@mail.ru", password: "test");   // Пермь, Мужской
+        var u14 = AddUser("Станислав", 26, 22, 2, new[] { sEnglish.Id }, new[] { sEntrepreneurship.Id, sYogaMeditation.Id }, avatarUrl: "/Users/Stanislav_26_irk.jpg", email: "stanislav@mail.ru", password: "test");   // Иркутск, Мужской
+        var u15 = AddUser("Маргарита", 29, 24, 3, new[] { sDrawing.Id, sDecor.Id }, new[] { sCooking.Id, sNutrition.Id }, avatarUrl: "/Users/Margarita_29_yar.jpg", email: "margarita@mail.ru", password: "test");   // Ярославль, Женский
+        var u16 = AddUser("Тимофей", 31, 25, 2, new[] { sMusic.Id, sPhoto.Id }, new[] { sTimeMgmt.Id, sJapanese.Id }, avatarUrl: "/Users/Timofey_31_vladiv.jpg", email: "timofey@mail.ru", password: "test");   // Владивосток, Мужской
+        var u17 = AddUser("Павел", 27, 29, 2, new[] { sVideoEdit.Id, sMarketing.Id }, new[] { sPhoto.Id, sTimeMgmt.Id }, avatarUrl: "/Users/Pavel_27_kem.jpg", email: "pavel@mail.ru", password: "test");   // Кемерово, Мужской (11-й новый)
+
         // Заявки на обмен
         ExchangeRequests.Add(new ExchangeRequest
         {
