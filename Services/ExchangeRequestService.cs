@@ -6,8 +6,13 @@ namespace SkillSwap.Api.Services;
 public class ExchangeRequestService
 {
     private readonly MockDataStore _store;
+    private readonly NotificationService _notificationService;
 
-    public ExchangeRequestService(MockDataStore store) => _store = store;
+    public ExchangeRequestService(MockDataStore store, NotificationService notificationService)
+    {
+        _store = store;
+        _notificationService = notificationService;
+    }
 
     /// <summary>Возвращает список заявок на обмен с опциональной фильтрацией по пользователю и статусу.</summary>
     /// <param name="userId">Id пользователя (заявки, где он отправитель или получатель).</param>
@@ -48,6 +53,7 @@ public class ExchangeRequestService
             CreatedAt = DateTime.UtcNow
         };
         _store.ExchangeRequests.Add(req);
+        _notificationService.CreateNotification(req.ToUserId, "ExchangeOffer", req.Id, req.CreatedAt);
         return ToDto(req);
     }
 
@@ -74,6 +80,7 @@ public class ExchangeRequestService
                 Status = "Active",
                 StartedAt = DateTime.UtcNow
             });
+            _notificationService.CreateNotification(req.FromUserId, "ExchangeAccepted", req.Id, req.RespondedAt);
         }
         return ToDto(req);
     }

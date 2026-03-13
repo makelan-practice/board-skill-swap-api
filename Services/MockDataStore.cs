@@ -11,6 +11,7 @@ public class MockDataStore
     public List<ExchangeSession> ExchangeSessions { get; } = new();
     public List<Favorite> Favorites { get; } = new();
     public List<UserSkill> UserSkills { get; } = new();
+    public List<Notification> Notifications { get; } = new();
     public List<Gender> Genders { get; } = new();
     public List<City> Cities { get; } = new();
 
@@ -21,6 +22,7 @@ public class MockDataStore
     private int _nextSessionId = 1;
     private int _nextFavoriteId = 1;
     private int _nextUserSkillId = 1;
+    private int _nextNotificationId = 1;
 
     public MockDataStore()
     {
@@ -34,6 +36,7 @@ public class MockDataStore
     public int NextSessionId() => _nextSessionId++;
     public int NextFavoriteId() => _nextFavoriteId++;
     public int NextUserSkillId() => _nextUserSkillId++;
+    public int NextNotificationId() => _nextNotificationId++;
 
     /// <summary>Добавить навык пользователя (название, категория, подкатегория, описание, фото).</summary>
     public UserSkill AddUserSkill(int userId, string title, int categoryId, int skillId, string? description, List<string>? imageUrls)
@@ -236,6 +239,11 @@ public class MockDataStore
             CreatedAt = DateTime.UtcNow.AddDays(-1),
             RespondedAt = DateTime.UtcNow
         });
+
+        // Уведомления по заявкам (req1: u1->u2 Id=1, req2: u3->u4 Id=2)
+        Notifications.Add(new Notification { Id = NextNotificationId(), UserId = u2.Id, Type = "ExchangeOffer", ExchangeRequestId = 1, IsRead = false, CreatedAt = DateTime.UtcNow.AddDays(-2) });
+        Notifications.Add(new Notification { Id = NextNotificationId(), UserId = u4.Id, Type = "ExchangeOffer", ExchangeRequestId = 2, IsRead = true, CreatedAt = DateTime.UtcNow.AddDays(-1) });
+        Notifications.Add(new Notification { Id = NextNotificationId(), UserId = u3.Id, Type = "ExchangeAccepted", ExchangeRequestId = 2, IsRead = true, CreatedAt = DateTime.UtcNow });
 
         // Избранное
         Favorites.Add(new Favorite { Id = NextFavoriteId(), UserId = u1.Id, TargetUserId = u2.Id, AddedAt = DateTime.UtcNow.AddDays(-1) });

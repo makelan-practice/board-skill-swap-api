@@ -22,6 +22,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ExchangeRequestService>();
 builder.Services.AddScoped<ExchangeSessionService>();
 builder.Services.AddScoped<FavoriteService>();
+builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<MatchService>();
 
 // CORS для фронтенда

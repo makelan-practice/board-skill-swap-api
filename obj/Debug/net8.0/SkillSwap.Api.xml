@@ -86,6 +86,27 @@
             <param name="maxCount">Максимальное количество пар (по умолчанию 20).</param>
             <returns>Список пар: пользователь и навыки обмена.</returns>
         </member>
+        <member name="M:SkillSwap.Api.Controllers.NotificationsController.GetNotifications(System.Int32,System.Boolean)">
+            <summary>Список уведомлений пользователя. Новые и просмотренные можно разделить по флагу unreadOnly.</summary>
+            <param name="userId">Id пользователя.</param>
+            <param name="unreadOnly">true — только непрочитанные (новые), false — все.</param>
+            <returns>Список уведомлений (Message, SubMessage, ExchangeRequestId, RelatedUserId для кнопки «Перейти»).</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.NotificationsController.MarkAsRead(System.Int32,System.Int32)">
+            <summary>Отметить одно уведомление как прочитанное.</summary>
+            <param name="id">Id уведомления.</param>
+            <param name="userId">Id пользователя (проверка владельца).</param>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.NotificationsController.MarkAllAsRead(System.Int32)">
+            <summary>Прочитать все — отметить все уведомления пользователя как прочитанные.</summary>
+            <param name="userId">Id пользователя.</param>
+            <returns>Количество отмеченных уведомлений.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.NotificationsController.ClearViewed(System.Int32)">
+            <summary>Очистить просмотренные — удалить все прочитанные уведомления пользователя.</summary>
+            <param name="userId">Id пользователя.</param>
+            <returns>Количество удалённых уведомлений.</returns>
+        </member>
         <member name="M:SkillSwap.Api.Controllers.ReferencesController.GetGenders">
             <summary>Справочник полов (Не указан, Мужской, Женский).</summary>
             <returns>Список { id, name } для выпадающего списка.</returns>
@@ -203,6 +224,9 @@
         <member name="T:SkillSwap.Api.Models.Dtos.UserSkillDto">
             <summary>Навык пользователя в ответе API (с названиями категории и подкатегории).</summary>
         </member>
+        <member name="T:SkillSwap.Api.Models.Notification">
+            <summary>Уведомление для пользователя (предложение обмена, принятие обмена и т.д.).</summary>
+        </member>
         <member name="P:SkillSwap.Api.Models.User.Email">
             <summary>Email для входа (уникальный).</summary>
         </member>
@@ -319,6 +343,21 @@
         </member>
         <member name="M:SkillSwap.Api.Services.MockDataStore.AddUserByRegistration(System.String,System.String,System.String,System.Nullable{System.DateOnly},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.Int32})">
             <summary>Регистрация нового пользователя (для Auth).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.NotificationService.GetNotifications(System.Int32,System.Boolean)">
+            <summary>Список уведомлений пользователя. По умолчанию все; unreadOnly=true — только непрочитанные (новые).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.NotificationService.MarkAsRead(System.Int32,System.Int32)">
+            <summary>Отметить уведомление как прочитанное.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.NotificationService.MarkAllAsRead(System.Int32)">
+            <summary>Отметить все уведомления пользователя как прочитанные (Прочитать все).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.NotificationService.ClearViewed(System.Int32)">
+            <summary>Удалить просмотренные уведомления (Очистить).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.NotificationService.CreateNotification(System.Int32,System.String,System.Int32,System.Nullable{System.DateTime})">
+            <summary>Создать уведомление (вызывается при создании/принятии заявки на обмен).</summary>
         </member>
         <member name="M:SkillSwap.Api.Services.ReferenceService.GetGenders">
             <summary>Справочник полов (для формы регистрации и фильтров).</summary>
