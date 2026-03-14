@@ -10,6 +10,8 @@ public class UserCardDto
     public int GenderId { get; set; }
     public string Gender { get; set; } = string.Empty; // название из справочника
     public string? AvatarUrl { get; set; }
+    /// <summary>О себе (краткое описание для карточки).</summary>
+    public string? About { get; set; }
     public List<string> CanTeach { get; set; } = new();   // Учу
     public List<string> WantsToLearn { get; set; } = new(); // Учусь
 }

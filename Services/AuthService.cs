@@ -43,6 +43,7 @@ public class AuthService
             dto.GenderId,
             dto.CityId,
             dto.AvatarUrl,
+            dto.About,
             dto.LearningSkillIds
         );
         return new RegisterResult { Success = true, User = user };

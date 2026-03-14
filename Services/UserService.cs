@@ -115,6 +115,7 @@ public class UserService
             GenderId = u.GenderId,
             Gender = gender,
             AvatarUrl = u.AvatarUrl,
+            About = u.About,
             CanTeach = u.TeachingSkillIds.Select(SkillName).Where(n => n != "").ToList(),
             WantsToLearn = u.LearningSkillIds.Select(SkillName).Where(n => n != "").ToList()
         };

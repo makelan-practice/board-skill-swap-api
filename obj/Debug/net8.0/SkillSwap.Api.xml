@@ -218,8 +218,14 @@
         <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.AvatarUrl">
             <summary>URL аватара (после загрузки) или null.</summary>
         </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.About">
+            <summary>О себе (краткое описание для карточки).</summary>
+        </member>
         <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.LearningSkillIds">
             <summary>Id навыков, которым хочет научиться (Учусь).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.UserCardDto.About">
+            <summary>О себе (краткое описание для карточки).</summary>
         </member>
         <member name="T:SkillSwap.Api.Models.Dtos.UserSkillDto">
             <summary>Навык пользователя в ответе API (с названиями категории и подкатегории).</summary>
@@ -241,6 +247,9 @@
         </member>
         <member name="P:SkillSwap.Api.Models.User.GenderId">
             <summary>Id пола из справочника (references/genders). 1 = Не указан, 2 = Мужской, 3 = Женский.</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.User.About">
+            <summary>О себе (краткое описание для карточки).</summary>
         </member>
         <member name="P:SkillSwap.Api.Models.User.TeachingSkillIds">
             <summary>Чему может научить (Учу)</summary>
@@ -341,7 +350,7 @@
         <member name="M:SkillSwap.Api.Services.MockDataStore.AddUserSkill(System.Int32,System.String,System.Int32,System.Int32,System.String,System.Collections.Generic.List{System.String})">
             <summary>Добавить навык пользователя (название, категория, подкатегория, описание, фото).</summary>
         </member>
-        <member name="M:SkillSwap.Api.Services.MockDataStore.AddUserByRegistration(System.String,System.String,System.String,System.Nullable{System.DateOnly},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Collections.Generic.List{System.Int32})">
+        <member name="M:SkillSwap.Api.Services.MockDataStore.AddUserByRegistration(System.String,System.String,System.String,System.Nullable{System.DateOnly},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Collections.Generic.List{System.Int32})">
             <summary>Регистрация нового пользователя (для Auth).</summary>
         </member>
         <member name="M:SkillSwap.Api.Services.NotificationService.GetNotifications(System.Int32,System.Boolean)">

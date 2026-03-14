@@ -14,6 +14,8 @@ public class RegisterDto
     public int? CityId { get; set; }
     /// <summary>URL аватара (после загрузки) или null.</summary>
     public string? AvatarUrl { get; set; }
+    /// <summary>О себе (краткое описание для карточки).</summary>
+    public string? About { get; set; }
     /// <summary>Id навыков, которым хочет научиться (Учусь).</summary>
     public List<int>? LearningSkillIds { get; set; }
 }
