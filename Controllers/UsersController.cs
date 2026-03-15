@@ -96,4 +96,15 @@ public class UsersController : ControllerBase
         var list = _userService.GetRecommended(userId, count);
         return Ok(list);
     }
+
+    /// <summary>Похожие предложения: карточки пользователей, у которых есть такие же навыки «Может научить», как у указанного пользователя.</summary>
+    /// <param name="userId">Id пользователя, карточку которого просматривают.</param>
+    /// <param name="count">Количество записей (по умолчанию 6).</param>
+    /// <returns>Список карточек пользователей.</returns>
+    [HttpGet("similar")]
+    public IActionResult GetSimilar([FromQuery] int userId, [FromQuery] int count = 6)
+    {
+        var list = _userService.GetSimilar(userId, count);
+        return Ok(list);
+    }
 }

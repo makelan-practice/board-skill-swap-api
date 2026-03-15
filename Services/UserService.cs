@@ -100,6 +100,24 @@ public class UserService
         return recommended;
     }
 
+    /// <summary>Возвращает похожие предложения: пользователи, у которых есть хотя бы один навык «Может научить» такой же, как у указанного пользователя.</summary>
+    /// <param name="userId">Id пользователя, карточку которого просматривают (по нему ищем похожих).</param>
+    /// <param name="count">Максимальное количество записей.</param>
+    /// <returns>Список карточек пользователей с похожими предложениями.</returns>
+    public IEnumerable<UserCardDto> GetSimilar(int userId, int count = 6)
+    {
+        var user = _store.Users.FirstOrDefault(u => u.Id == userId);
+        if (user == null || !user.TeachingSkillIds.Any()) return Enumerable.Empty<UserCardDto>();
+
+        var teachingIds = user.TeachingSkillIds.ToHashSet();
+        var similar = _store.Users
+            .Where(u => u.Id != userId)
+            .Where(u => u.TeachingSkillIds.Any(sid => teachingIds.Contains(sid)))
+            .Take(count)
+            .Select(ToUserCardDto);
+        return similar;
+    }
+
     private UserCardDto ToUserCardDto(User u)
     {
         string SkillName(int id) => _store.Skills.FirstOrDefault(s => s.Id == id)?.Name ?? "";

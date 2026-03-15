@@ -66,6 +66,7 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 | GET | `/api/users/popular?count=6` | Популярные |
 | GET | `/api/users/new?count=6` | Новые |
 | GET | `/api/users/recommended?userId=1&count=6` | Рекомендуемые для обмена |
+| GET | `/api/users/similar?userId=1&count=6` | Похожие предложения (те же навыки «Может научить») |
 
 ### Навыки `GET /api/skills`
 | Метод | Путь | Описание |
