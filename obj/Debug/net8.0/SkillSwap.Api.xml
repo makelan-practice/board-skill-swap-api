@@ -138,6 +138,11 @@
             <param name="id">Id навыка.</param>
             <returns>Навык или 404.</returns>
         </member>
+        <member name="M:SkillSwap.Api.Controllers.UploadController.UploadSkillImage(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>Загрузить изображение для навыка пользователя. Возвращает URL для поля imageUrls при создании/редактировании скилла.</summary>
+            <param name="file">Файл изображения (multipart/form-data, имя поля: file).</param>
+            <returns>URL загруженного файла (подставьте в imageUrls при POST/PUT /api/users/{userId}/skills) или 400 при ошибке.</returns>
+        </member>
         <member name="M:SkillSwap.Api.Controllers.UsersController.GetUsers(System.String,System.Int32[],System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
             <summary>Список пользователей с фильтрами (тип активности, навыки, пол, город, поиск по навыку).</summary>
             <param name="activityType">«Хочу научиться» или «Могу научить».</param>
@@ -170,6 +175,12 @@
         <member name="M:SkillSwap.Api.Controllers.UsersController.GetRecommended(System.Int32,System.Int32)">
             <summary>Рекомендуемые пользователи для обмена (для блока «Рекомендуем»).</summary>
             <param name="userId">Id текущего пользователя.</param>
+            <param name="count">Количество записей (по умолчанию 6).</param>
+            <returns>Список карточек пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UsersController.GetSimilar(System.Int32,System.Int32)">
+            <summary>Похожие предложения: карточки пользователей, у которых есть такие же навыки «Может научить», как у указанного пользователя.</summary>
+            <param name="userId">Id пользователя, карточку которого просматривают.</param>
             <param name="count">Количество записей (по умолчанию 6).</param>
             <returns>Список карточек пользователей.</returns>
         </member>
@@ -428,6 +439,12 @@
             <param name="userId">Id текущего пользователя.</param>
             <param name="count">Максимальное количество записей.</param>
             <returns>Список карточек пользователей.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserService.GetSimilar(System.Int32,System.Int32)">
+            <summary>Возвращает похожие предложения: пользователи, у которых есть хотя бы один навык «Может научить» такой же, как у указанного пользователя.</summary>
+            <param name="userId">Id пользователя, карточку которого просматривают (по нему ищем похожих).</param>
+            <param name="count">Максимальное количество записей.</param>
+            <returns>Список карточек пользователей с похожими предложениями.</returns>
         </member>
         <member name="M:SkillSwap.Api.Services.UserSkillService.GetByUserId(System.Int32)">
             <summary>Список навыков пользователя (Учу — с описанием и фото).</summary>

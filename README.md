@@ -76,6 +76,11 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 | GET | `/api/skills?categoryId=&search=` | Навыки (опционально по категории и поиск) |
 | GET | `/api/skills/{id}` | Навык по id |
 
+### Загрузка файлов `POST /api/upload`
+| Метод | Путь | Описание |
+|-------|------|----------|
+| POST | `/api/upload/skill-image` | Загрузить фото навыка (multipart/form-data, поле `file`). Ответ: `{ "url": "/Skills/..." }` — подставить в `imageUrls` при создании/редактировании скилла (`POST/PUT /api/users/{userId}/skills`). Лимит 5 МБ, форматы: jpg, jpeg, png, gif, webp. |
+
 ### Заявки на обмен `GET/POST /api/exchangerequests`
 | Метод | Путь | Описание |
 |-------|------|----------|

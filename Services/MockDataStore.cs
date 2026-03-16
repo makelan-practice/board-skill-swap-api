@@ -250,7 +250,22 @@ public class MockDataStore
         Favorites.Add(new Favorite { Id = NextFavoriteId(), UserId = u1.Id, TargetUserId = u2.Id, AddedAt = DateTime.UtcNow.AddDays(-1) });
         Favorites.Add(new Favorite { Id = NextFavoriteId(), UserId = u1.Id, TargetUserId = u4.Id, AddedAt = DateTime.UtcNow });
 
-        // Навыки пользователей (название, категория, подкатегория, описание, фото)
+        // Пул фото в корне wwwroot (минимум 4 на скилл)
+        var imagePool = new List<string>
+        {
+            "/drums_1.jpg", "/photo_skill_1.jpg", "/photo_skill_2.jpg", "/drums-1.jpg", "/drums-2.jpg", "/drums-3.jpg",
+            "/yoga-1.jpg", "/yoga-2.jpg", "/yoga-3.jpg", "/yoga-4.jpg", "/foto-1.jpg", "/foto-2.jpg", "/foto-3.jpg", "/foto-4.jpg",
+            "/spahish-1.jpg", "/spahish-2.jpg", "/food-1.jpg", "/food-2.jpg", "/business-1.jpg", "/time-1.jpg", "/english-1.jpg"
+        };
+        List<string> TakeImageUrls(int seed)
+        {
+            var list = new List<string>(4);
+            for (var i = 0; i < 4; i++)
+                list.Add(imagePool[(seed + i) % imagePool.Count]);
+            return list;
+        }
+
+        // Навыки пользователей (название, категория, подкатегория, описание, фото) — минимум 4 фото на скилл
         UserSkills.Add(new UserSkill
         {
             Id = NextUserSkillId(),
@@ -259,7 +274,7 @@ public class MockDataStore
             CategoryId = catArt.Id,
             SkillId = sMusic.Id,
             Description = "Научу базовой постановке рук и простым ритмам. Индивидуальные занятия.",
-            ImageUrls = new List<string> { "/Skills/drums_1.jpg" }
+            ImageUrls = TakeImageUrls(0)
         });
         UserSkills.Add(new UserSkill
         {
@@ -269,8 +284,22 @@ public class MockDataStore
             CategoryId = catArt.Id,
             SkillId = sPhoto.Id,
             Description = "Основы композиции и света для портретов. Выезд на локации.",
-            ImageUrls = new List<string> { "/Skills/photo_skill_1.jpg", "/Skills/photo_skill_2.jpg" }
+            ImageUrls = TakeImageUrls(3)
         });
+
+        // У всех пользователей должны быть скиллы в /api/users/{userId}/skills — добавляем по TeachingSkillIds (по 4 фото на скилл)
+        var skillIndex = 0;
+        foreach (var user in Users)
+        {
+            foreach (var skillId in user.TeachingSkillIds)
+            {
+                if (UserSkills.Any(us => us.UserId == user.Id && us.SkillId == skillId))
+                    continue;
+                var skill = Skills.FirstOrDefault(s => s.Id == skillId);
+                if (skill == null) continue;
+                AddUserSkill(user.Id, skill.Name, skill.CategoryId, skillId, null, TakeImageUrls(skillIndex++));
+            }
+        }
     }
 
     private Category AddCategory(string name)
