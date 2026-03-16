@@ -61,6 +61,66 @@ public class UserService
         return user == null ? null : ToUserCardDto(user);
     }
 
+    /// <summary>Возвращает полный профиль пользователя для экрана «Личные данные» (включает Email и DateOfBirth).</summary>
+    public ProfileDto? GetProfile(int id)
+    {
+        var user = _store.Users.FirstOrDefault(u => u.Id == id);
+        if (user == null) return null;
+        var city = user.CityId.HasValue ? _store.Cities.FirstOrDefault(c => c.Id == user.CityId.Value)?.Name ?? "" : "";
+        var gender = _store.Genders.FirstOrDefault(g => g.Id == user.GenderId)?.Name ?? "";
+        return new ProfileDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Name = user.Name,
+            DateOfBirth = user.DateOfBirth,
+            CityId = user.CityId,
+            City = city,
+            GenderId = user.GenderId,
+            Gender = gender,
+            AvatarUrl = user.AvatarUrl,
+            About = user.About
+        };
+    }
+
+    /// <summary>Обновляет профиль пользователя. Проверяет уникальность email при смене.</summary>
+    /// <returns>Обновлённый профиль или null, если пользователь не найден. Ошибки: EmailAlreadyExists.</returns>
+    public (ProfileDto? Profile, string? ErrorCode, string? ErrorMessage) UpdateProfile(int id, UpdateProfileDto dto)
+    {
+        var user = _store.Users.FirstOrDefault(u => u.Id == id);
+        if (user == null) return (null, null, null);
+
+        if (dto.Email != null)
+        {
+            var email = dto.Email.Trim().ToLowerInvariant();
+            if (_store.Users.Any(u => u.Id != id && u.Email.Trim().ToLowerInvariant() == email))
+                return (null, "EmailAlreadyExists", "Email уже используется");
+            user.Email = dto.Email.Trim();
+        }
+        if (dto.Name != null) user.Name = dto.Name.Trim();
+        if (dto.DateOfBirth.HasValue)
+        {
+            user.DateOfBirth = dto.DateOfBirth;
+            user.Age = (int)((DateTime.Today - dto.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)).TotalDays / 365.25);
+        }
+        if (dto.CityId.HasValue) user.CityId = dto.CityId;
+        if (dto.GenderId.HasValue) user.GenderId = dto.GenderId.Value;
+        if (dto.AvatarUrl != null) user.AvatarUrl = string.IsNullOrWhiteSpace(dto.AvatarUrl) ? null : dto.AvatarUrl.Trim();
+        if (dto.About != null) user.About = string.IsNullOrWhiteSpace(dto.About) ? null : dto.About.Trim();
+
+        var updated = GetProfile(id);
+        return (updated, null, null);
+    }
+
+    /// <summary>Обновляет только URL аватара пользователя (после загрузки файла).</summary>
+    public bool UpdateAvatar(int userId, string avatarUrl)
+    {
+        var user = _store.Users.FirstOrDefault(u => u.Id == userId);
+        if (user == null) return false;
+        user.AvatarUrl = avatarUrl;
+        return true;
+    }
+
     /// <summary>Возвращает популярных пользователей (по количеству указанных навыков).</summary>
     /// <param name="count">Максимальное количество записей.</param>
     /// <returns>Список карточек пользователей.</returns>

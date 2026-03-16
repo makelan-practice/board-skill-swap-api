@@ -11,6 +11,10 @@
         <member name="M:SkillSwap.Api.Controllers.AuthController.Login(SkillSwap.Api.Models.Dtos.LoginDto)">
             <summary>Вход по email и паролю. Возвращает данные пользователя и мок-токен.</summary>
         </member>
+        <member name="M:SkillSwap.Api.Controllers.AuthController.ChangePassword(SkillSwap.Api.Models.Dtos.ChangePasswordDto)">
+            <summary>Смена пароля пользователя.</summary>
+            <remarks>Ошибки: WrongPassword — 400. PasswordTooShort — 400. UserNotFound — 404.</remarks>
+        </member>
         <member name="M:SkillSwap.Api.Controllers.ExchangeRequestsController.GetRequests(System.Nullable{System.Int32},System.String)">
             <summary>Список заявок (по userId и/или status).</summary>
             <param name="userId">Id пользователя (отправитель или получатель).</param>
@@ -143,6 +147,12 @@
             <param name="file">Файл изображения (multipart/form-data, имя поля: file).</param>
             <returns>URL загруженного файла (подставьте в imageUrls при POST/PUT /api/users/{userId}/skills) или 400 при ошибке.</returns>
         </member>
+        <member name="M:SkillSwap.Api.Controllers.UploadController.UploadAvatar(System.Int32,Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>Загрузить аватар пользователя. Сохраняет файл в wwwroot/Users и обновляет профиль пользователя.</summary>
+            <param name="userId">Id пользователя.</param>
+            <param name="file">Файл изображения (multipart/form-data, имя поля: file).</param>
+            <returns>URL аватара (подставьте в AvatarUrl при PUT /api/users/{id}) или 400/404 при ошибке.</returns>
+        </member>
         <member name="M:SkillSwap.Api.Controllers.UsersController.GetUsers(System.String,System.Int32[],System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
             <summary>Список пользователей с фильтрами (тип активности, навыки, пол, город, поиск по навыку).</summary>
             <param name="activityType">«Хочу научиться» или «Могу научить».</param>
@@ -156,6 +166,17 @@
             <summary>Карточка пользователя по id.</summary>
             <param name="id">Id пользователя.</param>
             <returns>Карточка пользователя или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UsersController.GetProfile(System.Int32)">
+            <summary>Полный профиль пользователя для экрана «Личные данные» (почта, дата рождения, пол, город, о себе).</summary>
+            <param name="id">Id пользователя.</param>
+            <returns>Профиль или 404.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.UsersController.UpdateProfile(System.Int32,SkillSwap.Api.Models.Dtos.UpdateProfileDto)">
+            <summary>Обновить профиль пользователя (почта, имя, дата рождения, пол, город, о себе, аватар).</summary>
+            <param name="id">Id пользователя.</param>
+            <param name="dto">Данные для обновления (все поля опциональны).</param>
+            <remarks>Ошибки: Email уже используется — 409 + ErrorCode "EmailAlreadyExists".</remarks>
         </member>
         <member name="M:SkillSwap.Api.Controllers.UsersController.GetAvatar(System.Int32)">
             <summary>Возвращает файл аватара пользователя (изображение).</summary>
@@ -199,6 +220,18 @@
         <member name="M:SkillSwap.Api.Controllers.UserSkillsController.DeleteUserSkill(System.Int32,System.Int32)">
             <summary>Удалить навык пользователя.</summary>
         </member>
+        <member name="T:SkillSwap.Api.Models.Dtos.ChangePasswordDto">
+            <summary>Тело запроса смены пароля.</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.ChangePasswordDto.UserId">
+            <summary>Id пользователя (текущий пользователь).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.ChangePasswordDto.CurrentPassword">
+            <summary>Текущий пароль (для проверки).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.ChangePasswordDto.NewPassword">
+            <summary>Новый пароль (не менее 8 символов).</summary>
+        </member>
         <member name="T:SkillSwap.Api.Models.Dtos.CreateUserSkillDto">
             <summary>Создание/редактирование навыка пользователя (форма: название, категория, подкатегория, описание, фото).</summary>
         </member>
@@ -213,6 +246,15 @@
         </member>
         <member name="P:SkillSwap.Api.Models.Dtos.LoginResponseDto.Token">
             <summary>Мок-токен (в боевом API — JWT).</summary>
+        </member>
+        <member name="T:SkillSwap.Api.Models.Dtos.ProfileDto">
+            <summary>Полный профиль пользователя для экрана «Личные данные» (включает почту и дату рождения).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.ProfileDto.DateOfBirth">
+            <summary>Дата рождения (дд.мм.гггг).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.ProfileDto.About">
+            <summary>О себе.</summary>
         </member>
         <member name="T:SkillSwap.Api.Models.Dtos.RegisterDto">
             <summary>Тело запроса регистрации (расширенная форма).</summary>
@@ -234,6 +276,12 @@
         </member>
         <member name="P:SkillSwap.Api.Models.Dtos.RegisterDto.LearningSkillIds">
             <summary>Id навыков, которым хочет научиться (Учусь).</summary>
+        </member>
+        <member name="T:SkillSwap.Api.Models.Dtos.UpdateProfileDto">
+            <summary>Тело запроса обновления профиля (все поля опциональны).</summary>
+        </member>
+        <member name="P:SkillSwap.Api.Models.Dtos.UpdateProfileDto.DateOfBirth">
+            <summary>Дата рождения (дд.мм.гггг).</summary>
         </member>
         <member name="P:SkillSwap.Api.Models.Dtos.UserCardDto.About">
             <summary>О себе (краткое описание для карточки).</summary>
@@ -294,6 +342,10 @@
         </member>
         <member name="M:SkillSwap.Api.Services.AuthService.Login(SkillSwap.Api.Models.Dtos.LoginDto)">
             <summary>Вход по email и паролю. Возвращает данные пользователя и мок-токен или null.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.AuthService.ChangePassword(System.Int32,System.String,System.String)">
+            <summary>Смена пароля. Проверяет текущий пароль и длину нового (не менее 8 символов).</summary>
+            <returns>Успех или код ошибки: WrongPassword, PasswordTooShort.</returns>
         </member>
         <member name="M:SkillSwap.Api.Services.ExchangeRequestService.GetRequests(System.Nullable{System.Int32},System.String)">
             <summary>Возвращает список заявок на обмен с опциональной фильтрацией по пользователю и статусу.</summary>
@@ -423,6 +475,16 @@
             <summary>Возвращает карточку пользователя по идентификатору.</summary>
             <param name="id">Id пользователя.</param>
             <returns>Карточка пользователя (Учу / Учусь) или null.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserService.GetProfile(System.Int32)">
+            <summary>Возвращает полный профиль пользователя для экрана «Личные данные» (включает Email и DateOfBirth).</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserService.UpdateProfile(System.Int32,SkillSwap.Api.Models.Dtos.UpdateProfileDto)">
+            <summary>Обновляет профиль пользователя. Проверяет уникальность email при смене.</summary>
+            <returns>Обновлённый профиль или null, если пользователь не найден. Ошибки: EmailAlreadyExists.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserService.UpdateAvatar(System.Int32,System.String)">
+            <summary>Обновляет только URL аватара пользователя (после загрузки файла).</summary>
         </member>
         <member name="M:SkillSwap.Api.Services.UserService.GetPopular(System.Int32)">
             <summary>Возвращает популярных пользователей (по количеству указанных навыков).</summary>

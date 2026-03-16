@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SkillSwap.Api.Models.Dtos;
 using SkillSwap.Api.Services;
 
 namespace SkillSwap.Api.Controllers;
@@ -44,6 +45,31 @@ public class UsersController : ControllerBase
         var user = _userService.GetUserById(id);
         if (user == null) return NotFound();
         return Ok(user);
+    }
+
+    /// <summary>Полный профиль пользователя для экрана «Личные данные» (почта, дата рождения, пол, город, о себе).</summary>
+    /// <param name="id">Id пользователя.</param>
+    /// <returns>Профиль или 404.</returns>
+    [HttpGet("{id:int}/profile")]
+    public IActionResult GetProfile(int id)
+    {
+        var profile = _userService.GetProfile(id);
+        if (profile == null) return NotFound();
+        return Ok(profile);
+    }
+
+    /// <summary>Обновить профиль пользователя (почта, имя, дата рождения, пол, город, о себе, аватар).</summary>
+    /// <param name="id">Id пользователя.</param>
+    /// <param name="dto">Данные для обновления (все поля опциональны).</param>
+    /// <remarks>Ошибки: Email уже используется — 409 + ErrorCode "EmailAlreadyExists".</remarks>
+    [HttpPut("{id:int}")]
+    public IActionResult UpdateProfile(int id, [FromBody] UpdateProfileDto dto)
+    {
+        var (profile, errorCode, errorMessage) = _userService.UpdateProfile(id, dto);
+        if (profile == null && errorCode == null) return NotFound();
+        if (errorCode == "EmailAlreadyExists")
+            return Conflict(new { errorCode, message = errorMessage });
+        return Ok(profile);
     }
 
     /// <summary>Возвращает файл аватара пользователя (изображение).</summary>

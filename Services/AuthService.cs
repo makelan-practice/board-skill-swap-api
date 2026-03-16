@@ -68,4 +68,19 @@ public class AuthService
             Token = $"mock-token-{user.Id}-{Guid.NewGuid():N}"
         };
     }
+
+    /// <summary>Смена пароля. Проверяет текущий пароль и длину нового (не менее 8 символов).</summary>
+    /// <returns>Успех или код ошибки: WrongPassword, PasswordTooShort.</returns>
+    public (bool Success, string? ErrorCode, string? ErrorMessage) ChangePassword(int userId, string currentPassword, string newPassword)
+    {
+        var user = _store.Users.FirstOrDefault(u => u.Id == userId);
+        if (user == null)
+            return (false, "UserNotFound", "Пользователь не найден");
+        if (user.Password != currentPassword)
+            return (false, "WrongPassword", "Неверный текущий пароль");
+        if (string.IsNullOrEmpty(newPassword) || newPassword.Length < 8)
+            return (false, "PasswordTooShort", "Новый пароль должен содержать не менее 8 знаков");
+        user.Password = newPassword;
+        return (true, null, null);
+    }
 }

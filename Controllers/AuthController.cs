@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillSwap.Api.Models.Dtos;
 using SkillSwap.Api.Services;
 
+
 namespace SkillSwap.Api.Controllers;
 
 [ApiController]
@@ -47,5 +48,16 @@ public class AuthController : ControllerBase
         if (response == null)
             return Unauthorized(new { message = "Неверный email или пароль" });
         return Ok(response);
+    }
+
+    /// <summary>Смена пароля пользователя.</summary>
+    /// <remarks>Ошибки: WrongPassword — 400. PasswordTooShort — 400. UserNotFound — 404.</remarks>
+    [HttpPost("change-password")]
+    public IActionResult ChangePassword([FromBody] ChangePasswordDto dto)
+    {
+        var (success, errorCode, errorMessage) = _authService.ChangePassword(dto.UserId, dto.CurrentPassword, dto.NewPassword);
+        if (success) return Ok(new { message = "Пароль успешно изменён" });
+        if (errorCode == "UserNotFound") return NotFound(new { errorCode, message = errorMessage });
+        return BadRequest(new { errorCode, message = errorMessage });
     }
 }

@@ -58,15 +58,25 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 
 ## Эндпоинты
 
-### Пользователи `GET/POST /api/users`
+### Пользователи `GET/PUT /api/users`
 | Метод | Путь | Описание |
 |-------|------|----------|
 | GET | `/api/users` | Список с фильтрами: `activityType`, `skillIds`, `genderId`, `cityId`, `search` |
 | GET | `/api/users/{id}` | Карточка пользователя |
+| GET | `/api/users/{id}/profile` | Полный профиль для «Личные данные» (почта, дата рождения, пол, город, о себе) |
+| GET | `/api/users/{id}/avatar` | Файл аватара пользователя |
+| PUT | `/api/users/{id}` | Обновить профиль (body: `UpdateProfileDto`, все поля опциональны). 409 при занятом email. |
 | GET | `/api/users/popular?count=6` | Популярные |
 | GET | `/api/users/new?count=6` | Новые |
 | GET | `/api/users/recommended?userId=1&count=6` | Рекомендуемые для обмена |
 | GET | `/api/users/similar?userId=1&count=6` | Похожие предложения (те же навыки «Может научить») |
+
+### Авторизация `POST /api/auth`
+| Метод | Путь | Описание |
+|-------|------|----------|
+| POST | `/api/auth/register` | Регистрация (body: `RegisterDto`). 409 при занятом email, 400 при пароле &lt; 8 знаков. |
+| POST | `/api/auth/login` | Вход (body: `LoginDto`). Ответ: `userId`, `email`, `name`, `avatarUrl`, `token`. |
+| POST | `/api/auth/change-password` | Смена пароля (body: `ChangePasswordDto`: `userId`, `currentPassword`, `newPassword`). 400 при неверном текущем пароле или коротком новом. |
 
 ### Навыки `GET /api/skills`
 | Метод | Путь | Описание |
@@ -80,6 +90,7 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 | Метод | Путь | Описание |
 |-------|------|----------|
 | POST | `/api/upload/skill-image` | Загрузить фото навыка (multipart/form-data, поле `file`). Ответ: `{ "url": "/Skills/..." }` — подставить в `imageUrls` при создании/редактировании скилла (`POST/PUT /api/users/{userId}/skills`). Лимит 5 МБ, форматы: jpg, jpeg, png, gif, webp. |
+| POST | `/api/upload/avatar?userId=1` | Загрузить аватар пользователя (поле `file`). Файл сохраняется в `wwwroot/Users/`, профиль пользователя обновляется. Ответ: `{ "url": "/Users/..." }`. Лимит 5 МБ. |
 
 ### Заявки на обмен `GET/POST /api/exchangerequests`
 | Метод | Путь | Описание |
