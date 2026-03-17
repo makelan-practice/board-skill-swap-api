@@ -226,8 +226,9 @@ public class MockDataStore
             ToUserId = u2.Id,
             OfferedSkillId = sMusic.Id,
             RequestedSkillId = sEnglish.Id,
-            Status = "Pending",
-            CreatedAt = DateTime.UtcNow.AddDays(-2)
+            Status = "Accepted",
+            CreatedAt = DateTime.UtcNow.AddDays(-2),
+            RespondedAt = DateTime.UtcNow.AddHours(-1)
         });
         ExchangeRequests.Add(new ExchangeRequest
         {
@@ -240,11 +241,35 @@ public class MockDataStore
             CreatedAt = DateTime.UtcNow.AddDays(-1),
             RespondedAt = DateTime.UtcNow
         });
+        ExchangeRequests.Add(new ExchangeRequest
+        {
+            Id = NextRequestId(),
+            FromUserId = u5.Id,
+            ToUserId = u6.Id,
+            OfferedSkillId = sTimeMgmt.Id,
+            RequestedSkillId = sPhoto.Id,
+            Status = "Pending",
+            CreatedAt = DateTime.UtcNow.AddHours(-5)
+        });
+        ExchangeRequests.Add(new ExchangeRequest
+        {
+            Id = NextRequestId(),
+            FromUserId = u7.Id,
+            ToUserId = u2.Id,
+            OfferedSkillId = sPhoto.Id,
+            RequestedSkillId = sEnglish.Id,
+            Status = "Accepted",
+            CreatedAt = DateTime.UtcNow.AddDays(-3),
+            RespondedAt = DateTime.UtcNow.AddDays(-2)
+        });
 
-        // Уведомления по заявкам (req1: u1->u2 Id=1, req2: u3->u4 Id=2)
+        // Уведомления по заявкам: минимум 4 разных пользователя (u2, u4, u3, u6, u1)
         Notifications.Add(new Notification { Id = NextNotificationId(), UserId = u2.Id, Type = "ExchangeOffer", ExchangeRequestId = 1, IsRead = false, CreatedAt = DateTime.UtcNow.AddDays(-2) });
         Notifications.Add(new Notification { Id = NextNotificationId(), UserId = u4.Id, Type = "ExchangeOffer", ExchangeRequestId = 2, IsRead = true, CreatedAt = DateTime.UtcNow.AddDays(-1) });
         Notifications.Add(new Notification { Id = NextNotificationId(), UserId = u3.Id, Type = "ExchangeAccepted", ExchangeRequestId = 2, IsRead = true, CreatedAt = DateTime.UtcNow });
+        Notifications.Add(new Notification { Id = NextNotificationId(), UserId = u6.Id, Type = "ExchangeOffer", ExchangeRequestId = 3, IsRead = false, CreatedAt = DateTime.UtcNow.AddHours(-5) });
+        Notifications.Add(new Notification { Id = NextNotificationId(), UserId = u2.Id, Type = "ExchangeAccepted", ExchangeRequestId = 4, IsRead = true, CreatedAt = DateTime.UtcNow.AddDays(-2) });
+        Notifications.Add(new Notification { Id = NextNotificationId(), UserId = u1.Id, Type = "ExchangeAccepted", ExchangeRequestId = 1, IsRead = false, CreatedAt = DateTime.UtcNow.AddHours(-1) });
 
         // Избранное
         Favorites.Add(new Favorite { Id = NextFavoriteId(), UserId = u1.Id, TargetUserId = u2.Id, AddedAt = DateTime.UtcNow.AddDays(-1) });
