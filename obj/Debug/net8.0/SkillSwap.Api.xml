@@ -153,12 +153,12 @@
             <param name="file">Файл изображения (multipart/form-data, имя поля: file).</param>
             <returns>URL аватара (подставьте в AvatarUrl при PUT /api/users/{id}) или 400/404 при ошибке.</returns>
         </member>
-        <member name="M:SkillSwap.Api.Controllers.UsersController.GetUsers(System.String,System.Int32[],System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
+        <member name="M:SkillSwap.Api.Controllers.UsersController.GetUsers(System.String,System.Int32[],System.Nullable{System.Int32},System.Int32[],System.String)">
             <summary>Список пользователей с фильтрами (тип активности, навыки, пол, город, поиск по навыку).</summary>
             <param name="activityType">«Хочу научиться» или «Могу научить».</param>
             <param name="skillIds">Id навыков.</param>
             <param name="genderId">Id пола из справочника (1=не имеет значения, 2=Мужской, 3=Женский).</param>
-            <param name="cityId">Id города из справочника.</param>
+            <param name="cityIds">Id городов из справочника (можно несколько, как skillIds).</param>
             <param name="search">Поиск по названию навыка.</param>
             <returns>Список карточек пользователей.</returns>
         </member>
@@ -462,12 +462,12 @@
             <param name="id">Id навыка.</param>
             <returns>Навык или null.</returns>
         </member>
-        <member name="M:SkillSwap.Api.Services.UserService.GetUsers(System.String,System.Int32[],System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
+        <member name="M:SkillSwap.Api.Services.UserService.GetUsers(System.String,System.Int32[],System.Nullable{System.Int32},System.Int32[],System.String)">
             <summary>Возвращает список пользователей с фильтрацией по типу активности, навыкам, полу, городу и поиску по названию навыка.</summary>
             <param name="activityType">«Хочу научиться» или «Могу научить».</param>
             <param name="skillIds">Id навыков: показываются пользователи, у которых есть хотя бы один из них.</param>
             <param name="genderId">Id пола из справочника (1=Не указан/не имеет значения, 2=Мужской, 3=Женский).</param>
-            <param name="cityId">Id города из справочника.</param>
+            <param name="cityIds">Id городов из справочника; пользователь попадает в выборку, если его город в списке.</param>
             <param name="search">Поиск по названию навыка (в «Учу» или «Учусь»).</param>
             <returns>Список карточек пользователей.</returns>
         </member>

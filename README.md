@@ -61,7 +61,7 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 ### Пользователи `GET/PUT /api/users`
 | Метод | Путь | Описание |
 |-------|------|----------|
-| GET | `/api/users` | Список с фильтрами: `activityType`, `skillIds`, `genderId`, `cityId`, `search` |
+| GET | `/api/users` | Список с фильтрами: `activityType`, `skillIds`, `genderId`, `cityIds` (массив, как `skillIds`), `search` |
 | GET | `/api/users/{id}` | Карточка пользователя |
 | GET | `/api/users/{id}/profile` | Полный профиль для «Личные данные» (почта, дата рождения, пол, город, о себе) |
 | GET | `/api/users/{id}/avatar` | Файл аватара пользователя |
@@ -134,6 +134,7 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 - Карточки пользователей: `GET http://localhost:5287/api/users`
 - Поиск по навыку: `GET http://localhost:5287/api/users?search=английский`
 - Фильтр «Могу научить»: `GET http://localhost:5287/api/users?activityType=Могу научить`
+- Несколько городов: `GET http://localhost:5287/api/users?cityIds=1&cityIds=2` (как `skillIds`)
 - Категории: `GET http://localhost:5287/api/skills/categories`
 - Подбор пар для пользователя 1: `GET http://localhost:5287/api/match?userId=1`
 - Уведомления пользователя 2: `GET http://localhost:5287/api/notifications?userId=2`

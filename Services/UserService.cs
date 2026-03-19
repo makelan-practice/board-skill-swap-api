@@ -13,10 +13,10 @@ public class UserService
     /// <param name="activityType">«Хочу научиться» или «Могу научить».</param>
     /// <param name="skillIds">Id навыков: показываются пользователи, у которых есть хотя бы один из них.</param>
     /// <param name="genderId">Id пола из справочника (1=Не указан/не имеет значения, 2=Мужской, 3=Женский).</param>
-    /// <param name="cityId">Id города из справочника.</param>
+    /// <param name="cityIds">Id городов из справочника; пользователь попадает в выборку, если его город в списке.</param>
     /// <param name="search">Поиск по названию навыка (в «Учу» или «Учусь»).</param>
     /// <returns>Список карточек пользователей.</returns>
-    public IEnumerable<UserCardDto> GetUsers(string? activityType = null, int[]? skillIds = null, int? genderId = null, int? cityId = null, string? search = null)
+    public IEnumerable<UserCardDto> GetUsers(string? activityType = null, int[]? skillIds = null, int? genderId = null, int[]? cityIds = null, string? search = null)
     {
         var users = _store.Users.AsEnumerable();
         if (!string.IsNullOrWhiteSpace(search))
@@ -46,8 +46,8 @@ public class UserService
         if (genderId.HasValue && genderId.Value != 1) // 1 = Не указан / не имеет значения
             users = users.Where(u => u.GenderId == genderId.Value);
 
-        if (cityId.HasValue)
-            users = users.Where(u => u.CityId == cityId.Value);
+        if (cityIds is { Length: > 0 })
+            users = users.Where(u => u.CityId.HasValue && cityIds.Contains(u.CityId.Value));
 
         return users.Select(ToUserCardDto);
     }

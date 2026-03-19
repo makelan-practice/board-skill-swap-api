@@ -21,7 +21,7 @@ public class UsersController : ControllerBase
     /// <param name="activityType">«Хочу научиться» или «Могу научить».</param>
     /// <param name="skillIds">Id навыков.</param>
     /// <param name="genderId">Id пола из справочника (1=не имеет значения, 2=Мужской, 3=Женский).</param>
-    /// <param name="cityId">Id города из справочника.</param>
+    /// <param name="cityIds">Id городов из справочника (можно несколько, как skillIds).</param>
     /// <param name="search">Поиск по названию навыка.</param>
     /// <returns>Список карточек пользователей.</returns>
     [HttpGet]
@@ -29,10 +29,10 @@ public class UsersController : ControllerBase
         [FromQuery] string? activityType,
         [FromQuery] int[]? skillIds,
         [FromQuery] int? genderId,
-        [FromQuery] int? cityId,
+        [FromQuery] int[]? cityIds,
         [FromQuery] string? search)
     {
-        var list = _userService.GetUsers(activityType, skillIds, genderId, cityId, search);
+        var list = _userService.GetUsers(activityType, skillIds, genderId, cityIds, search);
         return Ok(list);
     }
 
