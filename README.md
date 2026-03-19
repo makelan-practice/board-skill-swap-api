@@ -129,6 +129,12 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 |-------|------|----------|
 | GET | `/api/match?userId=&maxCount=20` | Пользователи для взаимного обмена навыками |
 
+### Диагностика `GET/POST /api/diagnostics`
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/api/diagnostics/server-error-mode` | Текущий статус имитации серверной ошибки |
+| POST | `/api/diagnostics/server-error-mode?enabled=true|false` | Включить/выключить глобальный режим 500 для всех API-методов (кроме диагностического переключателя) |
+
 ## Примеры запросов
 
 - Карточки пользователей: `GET http://localhost:5287/api/users`
@@ -139,6 +145,8 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 - Подбор пар для пользователя 1: `GET http://localhost:5287/api/match?userId=1`
 - Уведомления пользователя 2: `GET http://localhost:5287/api/notifications?userId=2`
 - Только новые уведомления: `GET http://localhost:5287/api/notifications?userId=2&unreadOnly=true`
+- Включить имитацию 500: `POST http://localhost:5287/api/diagnostics/server-error-mode?enabled=true`
+- Выключить имитацию 500: `POST http://localhost:5287/api/diagnostics/server-error-mode?enabled=false`
 
 Данные при старте заполняются тестовыми пользователями, навыками, заявками и избранным (см. `Services/MockDataStore.cs`).
 

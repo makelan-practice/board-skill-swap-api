@@ -24,6 +24,7 @@ builder.Services.AddScoped<ExchangeSessionService>();
 builder.Services.AddScoped<FavoriteService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<MatchService>();
+builder.Services.AddSingleton<ApiFailureModeService>();
 
 // CORS для фронтенда
 builder.Services.AddCors(options =>
@@ -42,6 +43,26 @@ app.UseSwaggerUI();
 
 app.UseCors();
 app.UseStaticFiles(); // статические файлы из wwwroot (аватары: /Users/...)
+app.Use(async (context, next) =>
+{
+    var failureMode = context.RequestServices.GetRequiredService<ApiFailureModeService>();
+    var path = context.Request.Path;
+
+    var isApiCall = path.StartsWithSegments("/api");
+    var isDiagnosticsCall = path.StartsWithSegments("/api/diagnostics/server-error-mode");
+
+    if (isApiCall && !isDiagnosticsCall && failureMode.IsEnabled)
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        await context.Response.WriteAsJsonAsync(new
+        {
+            message = "Сервер временно недоступен (режим имитации 500)."
+        });
+        return;
+    }
+
+    await next();
+});
 app.MapControllers();
 
 app.Run();

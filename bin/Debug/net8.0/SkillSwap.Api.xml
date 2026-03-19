@@ -15,6 +15,13 @@
             <summary>Смена пароля пользователя.</summary>
             <remarks>Ошибки: WrongPassword — 400. PasswordTooShort — 400. UserNotFound — 404.</remarks>
         </member>
+        <member name="M:SkillSwap.Api.Controllers.DiagnosticsController.GetServerErrorMode">
+            <summary>Текущий статус режима имитации ошибки сервера.</summary>
+        </member>
+        <member name="M:SkillSwap.Api.Controllers.DiagnosticsController.SetServerErrorMode(System.Boolean)">
+            <summary>Включить или выключить глобальную имитацию ошибки 500 для API.</summary>
+            <param name="enabled">true — все API-методы (кроме этого служебного эндпоинта) отвечают 500.</param>
+        </member>
         <member name="M:SkillSwap.Api.Controllers.ExchangeRequestsController.GetRequests(System.Nullable{System.Int32},System.String)">
             <summary>Список заявок (по userId и/или status).</summary>
             <param name="userId">Id пользователя (отправитель или получатель).</param>
