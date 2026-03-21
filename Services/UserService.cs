@@ -10,31 +10,38 @@ public class UserService
     public UserService(MockDataStore store) => _store = store;
 
     /// <summary>Возвращает список пользователей с фильтрацией по типу активности, навыкам, полу, городу и поиску по названию навыка.</summary>
-    /// <param name="activityType">«Хочу научиться» или «Могу научить».</param>
+    /// <param name="activityType">Латиница: <c>can_teach</c> / <c>want_to_learn</c> (или <c>canTeach</c>, <c>wantToLearn</c>, дефис вместо подчёркивания). По-русски по-прежнему: «Могу научить», «Хочу научиться».</param>
     /// <param name="skillIds">Id навыков: показываются пользователи, у которых есть хотя бы один из них.</param>
     /// <param name="genderId">Id пола из справочника (1=Не указан/не имеет значения, 2=Мужской, 3=Женский).</param>
     /// <param name="cityIds">Id городов из справочника; пользователь попадает в выборку, если его город в списке.</param>
-    /// <param name="search">Поиск по названию навыка (в «Учу» или «Учусь»).</param>
+    /// <param name="search">Поиск по подстроке названия навыка. Без <paramref name="activityType"/> — совпадение в «Учу» или «Учусь». С <c>can_teach</c> — только в «Могу научить»; с <c>want_to_learn</c> — только в «Хочу научиться».</param>
     /// <returns>Список карточек пользователей.</returns>
     public IEnumerable<UserCardDto> GetUsers(string? activityType = null, int[]? skillIds = null, int? genderId = null, int[]? cityIds = null, string? search = null)
     {
         var users = _store.Users.AsEnumerable();
+        var activityKind = ParseActivityType(activityType);
+
         if (!string.IsNullOrWhiteSpace(search))
         {
             var skillIdsFromSearch = _store.Skills
                 .Where(s => s.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
                 .Select(s => s.Id)
                 .ToHashSet();
-            users = users.Where(u =>
-                u.TeachingSkillIds.Any(skillIdsFromSearch.Contains) ||
-                u.LearningSkillIds.Any(skillIdsFromSearch.Contains));
-        }
 
-        if (!string.IsNullOrEmpty(activityType))
+            users = activityKind switch
+            {
+                UserActivityKind.CanTeach => users.Where(u => u.TeachingSkillIds.Any(skillIdsFromSearch.Contains)),
+                UserActivityKind.WantToLearn => users.Where(u => u.LearningSkillIds.Any(skillIdsFromSearch.Contains)),
+                _ => users.Where(u =>
+                    u.TeachingSkillIds.Any(skillIdsFromSearch.Contains) ||
+                    u.LearningSkillIds.Any(skillIdsFromSearch.Contains))
+            };
+        }
+        else
         {
-            if (activityType.Equals("Хочу научиться", StringComparison.OrdinalIgnoreCase))
+            if (activityKind == UserActivityKind.WantToLearn)
                 users = users.Where(u => u.LearningSkillIds.Any());
-            else if (activityType.Equals("Могу научить", StringComparison.OrdinalIgnoreCase))
+            else if (activityKind == UserActivityKind.CanTeach)
                 users = users.Where(u => u.TeachingSkillIds.Any());
         }
 
@@ -180,6 +187,29 @@ public class UserService
             .Take(count)
             .Select(ToUserCardDto);
         return similar;
+    }
+
+    private enum UserActivityKind { None, WantToLearn, CanTeach }
+
+    /// <summary>Разбор activityType: латиница для Swagger/клиентов, русский — для совместимости.</summary>
+    private static UserActivityKind ParseActivityType(string? activityType)
+    {
+        if (string.IsNullOrWhiteSpace(activityType)) return UserActivityKind.None;
+        var t = activityType.Trim();
+        if (t.Equals("Хочу научиться", StringComparison.OrdinalIgnoreCase)) return UserActivityKind.WantToLearn;
+        if (t.Equals("Могу научить", StringComparison.OrdinalIgnoreCase)) return UserActivityKind.CanTeach;
+
+        var norm = t.Replace("-", "_", StringComparison.Ordinal);
+        if (norm.Equals("want_to_learn", StringComparison.OrdinalIgnoreCase)
+            || t.Equals("wantToLearn", StringComparison.OrdinalIgnoreCase)
+            || norm.Equals("learning", StringComparison.OrdinalIgnoreCase))
+            return UserActivityKind.WantToLearn;
+        if (norm.Equals("can_teach", StringComparison.OrdinalIgnoreCase)
+            || t.Equals("canTeach", StringComparison.OrdinalIgnoreCase)
+            || norm.Equals("teaching", StringComparison.OrdinalIgnoreCase))
+            return UserActivityKind.CanTeach;
+
+        return UserActivityKind.None;
     }
 
     private UserCardDto ToUserCardDto(User u)

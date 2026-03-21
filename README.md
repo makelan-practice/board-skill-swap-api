@@ -61,7 +61,7 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 ### Пользователи `GET/PUT /api/users`
 | Метод | Путь | Описание |
 |-------|------|----------|
-| GET | `/api/users` | Список с фильтрами: `activityType`, `skillIds`, `genderId`, `cityIds` (массив, как `skillIds`), `search` |
+| GET | `/api/users` | Список с фильтрами: `activityType` (`can_teach` / `want_to_learn`, см. ниже), `skillIds`, `genderId`, `cityIds` (массив, как `skillIds`), `search` (подстрока названия навыка; с `can_teach` / `want_to_learn` — только в «Учу» / только в «Учусь») |
 | GET | `/api/users/{id}` | Карточка пользователя |
 | GET | `/api/users/{id}/profile` | Полный профиль для «Личные данные» (почта, дата рождения, пол, город, о себе) |
 | GET | `/api/users/{id}/avatar` | Файл аватара пользователя |
@@ -138,8 +138,11 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 ## Примеры запросов
 
 - Карточки пользователей: `GET http://localhost:5287/api/users`
-- Поиск по навыку: `GET http://localhost:5287/api/users?search=английский`
-- Фильтр «Могу научить»: `GET http://localhost:5287/api/users?activityType=Могу научить`
+- Поиск по навыку (в «Учу» или «Учусь»): `GET http://localhost:5287/api/users?search=английский`
+- Только кто **может научить** испанскому: `GET http://localhost:5287/api/users?activityType=can_teach&search=испан`
+- Фильтр «Могу научить» (латиница, удобно в Swagger): `GET http://localhost:5287/api/users?activityType=can_teach`
+- Фильтр «Хочу научиться»: `GET http://localhost:5287/api/users?activityType=want_to_learn`
+- По-русски по-прежнему: `activityType=Могу%20научить` или `activityType=Хочу%20научиться`
 - Несколько городов: `GET http://localhost:5287/api/users?cityIds=1&cityIds=2` (как `skillIds`)
 - Категории: `GET http://localhost:5287/api/skills/categories`
 - Подбор пар для пользователя 1: `GET http://localhost:5287/api/match?userId=1`

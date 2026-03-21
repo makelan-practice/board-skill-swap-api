@@ -162,11 +162,11 @@
         </member>
         <member name="M:SkillSwap.Api.Controllers.UsersController.GetUsers(System.String,System.Int32[],System.Nullable{System.Int32},System.Int32[],System.String)">
             <summary>Список пользователей с фильтрами (тип активности, навыки, пол, город, поиск по навыку).</summary>
-            <param name="activityType">«Хочу научиться» или «Могу научить».</param>
+            <param name="activityType">Латиница: <c>can_teach</c> или <c>want_to_learn</c> (ещё: <c>canTeach</c>, <c>wantToLearn</c>, дефис вместо _). Русский вариант: «Могу научить» / «Хочу научиться».</param>
             <param name="skillIds">Id навыков.</param>
             <param name="genderId">Id пола из справочника (1=не имеет значения, 2=Мужской, 3=Женский).</param>
             <param name="cityIds">Id городов из справочника (можно несколько, как skillIds).</param>
-            <param name="search">Поиск по названию навыка.</param>
+            <param name="search">Подстрока названия навыка; вместе с <paramref name="activityType"/> ищется только в «Учу» или только в «Учусь».</param>
             <returns>Список карточек пользователей.</returns>
         </member>
         <member name="M:SkillSwap.Api.Controllers.UsersController.GetUser(System.Int32)">
@@ -474,11 +474,11 @@
         </member>
         <member name="M:SkillSwap.Api.Services.UserService.GetUsers(System.String,System.Int32[],System.Nullable{System.Int32},System.Int32[],System.String)">
             <summary>Возвращает список пользователей с фильтрацией по типу активности, навыкам, полу, городу и поиску по названию навыка.</summary>
-            <param name="activityType">«Хочу научиться» или «Могу научить».</param>
+            <param name="activityType">Латиница: <c>can_teach</c> / <c>want_to_learn</c> (или <c>canTeach</c>, <c>wantToLearn</c>, дефис вместо подчёркивания). По-русски по-прежнему: «Могу научить», «Хочу научиться».</param>
             <param name="skillIds">Id навыков: показываются пользователи, у которых есть хотя бы один из них.</param>
             <param name="genderId">Id пола из справочника (1=Не указан/не имеет значения, 2=Мужской, 3=Женский).</param>
             <param name="cityIds">Id городов из справочника; пользователь попадает в выборку, если его город в списке.</param>
-            <param name="search">Поиск по названию навыка (в «Учу» или «Учусь»).</param>
+            <param name="search">Поиск по подстроке названия навыка. Без <paramref name="activityType"/> — совпадение в «Учу» или «Учусь». С <c>can_teach</c> — только в «Могу научить»; с <c>want_to_learn</c> — только в «Хочу научиться».</param>
             <returns>Список карточек пользователей.</returns>
         </member>
         <member name="M:SkillSwap.Api.Services.UserService.GetUserById(System.Int32)">
@@ -517,6 +517,9 @@
             <param name="userId">Id пользователя, карточку которого просматривают (по нему ищем похожих).</param>
             <param name="count">Максимальное количество записей.</param>
             <returns>Список карточек пользователей с похожими предложениями.</returns>
+        </member>
+        <member name="M:SkillSwap.Api.Services.UserService.ParseActivityType(System.String)">
+            <summary>Разбор activityType: латиница для Swagger/клиентов, русский — для совместимости.</summary>
         </member>
         <member name="M:SkillSwap.Api.Services.UserSkillService.GetByUserId(System.Int32)">
             <summary>Список навыков пользователя (Учу — с описанием и фото).</summary>

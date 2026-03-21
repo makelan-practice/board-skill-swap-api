@@ -18,11 +18,11 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>Список пользователей с фильтрами (тип активности, навыки, пол, город, поиск по навыку).</summary>
-    /// <param name="activityType">«Хочу научиться» или «Могу научить».</param>
+    /// <param name="activityType">Латиница: <c>can_teach</c> или <c>want_to_learn</c> (ещё: <c>canTeach</c>, <c>wantToLearn</c>, дефис вместо _). Русский вариант: «Могу научить» / «Хочу научиться».</param>
     /// <param name="skillIds">Id навыков.</param>
     /// <param name="genderId">Id пола из справочника (1=не имеет значения, 2=Мужской, 3=Женский).</param>
     /// <param name="cityIds">Id городов из справочника (можно несколько, как skillIds).</param>
-    /// <param name="search">Поиск по названию навыка.</param>
+    /// <param name="search">Подстрока названия навыка; вместе с <paramref name="activityType"/> ищется только в «Учу» или только в «Учусь».</param>
     /// <returns>Список карточек пользователей.</returns>
     [HttpGet]
     public IActionResult GetUsers(
