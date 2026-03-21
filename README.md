@@ -61,7 +61,7 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 ### Пользователи `GET/PUT /api/users`
 | Метод | Путь | Описание |
 |-------|------|----------|
-| GET | `/api/users` | Список с фильтрами: `activityType` (`can_teach` / `want_to_learn`, см. ниже), `skillIds`, `genderId`, `cityIds` (массив, как `skillIds`), `search` (подстрока названия навыка; с `can_teach` / `want_to_learn` — только в «Учу» / только в «Учусь») |
+| GET | `/api/users` | Список с фильтрами: `activityType`, `skillIds` (с `can_teach` / `want_to_learn` — навык только в «Учу» / «Учусь»), `genderId`, `cityIds`, `search` (та же логика с `activityType`) |
 | GET | `/api/users/{id}` | Карточка пользователя |
 | GET | `/api/users/{id}/profile` | Полный профиль для «Личные данные» (почта, дата рождения, пол, город, о себе) |
 | GET | `/api/users/{id}/avatar` | Файл аватара пользователя |

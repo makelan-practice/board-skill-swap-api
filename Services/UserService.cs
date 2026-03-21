@@ -11,7 +11,7 @@ public class UserService
 
     /// <summary>Возвращает список пользователей с фильтрацией по типу активности, навыкам, полу, городу и поиску по названию навыка.</summary>
     /// <param name="activityType">Латиница: <c>can_teach</c> / <c>want_to_learn</c> (или <c>canTeach</c>, <c>wantToLearn</c>, дефис вместо подчёркивания). По-русски по-прежнему: «Могу научить», «Хочу научиться».</param>
-    /// <param name="skillIds">Id навыков: показываются пользователи, у которых есть хотя бы один из них.</param>
+    /// <param name="skillIds">Id навыков. Без <paramref name="activityType"/> — хотя бы один id в «Учу» или «Учусь». С <c>can_teach</c> / <c>want_to_learn</c> — только в соответствующем списке.</param>
     /// <param name="genderId">Id пола из справочника (1=Не указан/не имеет значения, 2=Мужской, 3=Женский).</param>
     /// <param name="cityIds">Id городов из справочника; пользователь попадает в выборку, если его город в списке.</param>
     /// <param name="search">Поиск по подстроке названия навыка. Без <paramref name="activityType"/> — совпадение в «Учу» или «Учусь». С <c>can_teach</c> — только в «Могу научить»; с <c>want_to_learn</c> — только в «Хочу научиться».</param>
@@ -46,9 +46,16 @@ public class UserService
         }
 
         if (skillIds is { Length: > 0 })
-            users = users.Where(u =>
-                u.TeachingSkillIds.Any(id => skillIds.Contains(id)) ||
-                u.LearningSkillIds.Any(id => skillIds.Contains(id)));
+        {
+            users = activityKind switch
+            {
+                UserActivityKind.CanTeach => users.Where(u => u.TeachingSkillIds.Any(id => skillIds.Contains(id))),
+                UserActivityKind.WantToLearn => users.Where(u => u.LearningSkillIds.Any(id => skillIds.Contains(id))),
+                _ => users.Where(u =>
+                    u.TeachingSkillIds.Any(id => skillIds.Contains(id)) ||
+                    u.LearningSkillIds.Any(id => skillIds.Contains(id)))
+            };
+        }
 
         if (genderId.HasValue && genderId.Value != 1) // 1 = Не указан / не имеет значения
             users = users.Where(u => u.GenderId == genderId.Value);
