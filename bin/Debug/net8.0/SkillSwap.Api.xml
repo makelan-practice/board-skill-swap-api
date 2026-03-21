@@ -191,7 +191,7 @@
             <returns>Файл изображения (image/jpeg или image/png) или 404.</returns>
         </member>
         <member name="M:SkillSwap.Api.Controllers.UsersController.GetPopular(System.Int32)">
-            <summary>Популярные пользователи (для блока «Популярное»).</summary>
+            <summary>Популярные пользователи по числу лайков (избранное), сначала с наибольшим количеством (для блока «Популярное»).</summary>
             <param name="count">Количество записей (по умолчанию 6).</param>
             <returns>Список карточек пользователей.</returns>
         </member>
@@ -494,7 +494,7 @@
             <summary>Обновляет только URL аватара пользователя (после загрузки файла).</summary>
         </member>
         <member name="M:SkillSwap.Api.Services.UserService.GetPopular(System.Int32)">
-            <summary>Возвращает популярных пользователей (по количеству указанных навыков).</summary>
+            <summary>Возвращает популярных пользователей (по числу лайков — уникальных пользователей, добавивших в избранное).</summary>
             <param name="count">Максимальное количество записей.</param>
             <returns>Список карточек пользователей.</returns>
         </member>

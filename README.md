@@ -66,7 +66,7 @@ API будет доступен на **http://localhost:8080**, Swagger — **ht
 | GET | `/api/users/{id}/profile` | Полный профиль для «Личные данные» (почта, дата рождения, пол, город, о себе) |
 | GET | `/api/users/{id}/avatar` | Файл аватара пользователя |
 | PUT | `/api/users/{id}` | Обновить профиль (body: `UpdateProfileDto`, все поля опциональны). 409 при занятом email. |
-| GET | `/api/users/popular?count=6` | Популярные |
+| GET | `/api/users/popular?count=6` | Популярные (по числу лайков: уникальные пользователи, добавившие карточку в избранное) |
 | GET | `/api/users/new?count=6` | Новые |
 | GET | `/api/users/recommended?userId=1&count=6` | Рекомендуемые для обмена |
 | GET | `/api/users/similar?userId=1&count=6` | Похожие предложения (те же навыки «Может научить») |

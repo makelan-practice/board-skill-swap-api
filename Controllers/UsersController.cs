@@ -100,7 +100,7 @@ public class UsersController : ControllerBase
         return PhysicalFile(path, contentType, fileName);
     }
 
-    /// <summary>Популярные пользователи (для блока «Популярное»).</summary>
+    /// <summary>Популярные пользователи по числу лайков (избранное), сначала с наибольшим количеством (для блока «Популярное»).</summary>
     /// <param name="count">Количество записей (по умолчанию 6).</param>
     /// <returns>Список карточек пользователей.</returns>
     [HttpGet("popular")]

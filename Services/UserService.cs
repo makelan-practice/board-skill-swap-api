@@ -121,14 +121,18 @@ public class UserService
         return true;
     }
 
-    /// <summary>Возвращает популярных пользователей (по количеству указанных навыков).</summary>
+    /// <summary>Возвращает популярных пользователей (по числу лайков — уникальных пользователей, добавивших в избранное).</summary>
     /// <param name="count">Максимальное количество записей.</param>
     /// <returns>Список карточек пользователей.</returns>
     public IEnumerable<UserCardDto> GetPopular(int count = 6)
     {
-        // Мок: считаем "популярными" по количеству навыков
+        var likeCountByTarget = _store.Favorites
+            .GroupBy(f => f.TargetUserId)
+            .ToDictionary(g => g.Key, g => g.Select(f => f.UserId).Distinct().Count());
+
         return _store.Users
-            .OrderByDescending(u => u.TeachingSkillIds.Count + u.LearningSkillIds.Count)
+            .OrderByDescending(u => likeCountByTarget.GetValueOrDefault(u.Id))
+            .ThenByDescending(u => u.Id)
             .Take(count)
             .Select(ToUserCardDto);
     }
