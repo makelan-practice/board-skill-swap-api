@@ -423,6 +423,9 @@
         <member name="M:SkillSwap.Api.Services.MockDataStore.AddUserByRegistration(System.String,System.String,System.String,System.Nullable{System.DateOnly},System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Collections.Generic.List{System.Int32})">
             <summary>Регистрация нового пользователя (для Auth).</summary>
         </member>
+        <member name="M:SkillSwap.Api.Services.MockDataStore.AddUser(System.String,System.Int32,System.Int32,System.Int32,System.Int32[],System.Int32[],System.String,System.String,System.String,System.Nullable{System.DateOnly},System.String)">
+            <summary>Добавляет пользователя в мок-хранилище. Из массива teaching в «Могу научить» сохраняется только первый id.</summary>
+        </member>
         <member name="M:SkillSwap.Api.Services.NotificationService.GetNotifications(System.Int32,System.Boolean)">
             <summary>Список уведомлений пользователя. По умолчанию все; unreadOnly=true — только непрочитанные (новые).</summary>
         </member>
